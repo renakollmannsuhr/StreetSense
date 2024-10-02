@@ -9,6 +9,6 @@ export default defineConfig({
     },
   },
   optimizeDeps: {
-    include: ['fast-deep-equal'],
+    include: ['fast-deep-equal', '@googlemaps/markerclusterer'],
   },
 });

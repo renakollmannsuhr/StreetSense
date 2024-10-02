@@ -42,6 +42,9 @@
 import { ref, onMounted } from 'vue';
 import axios from 'axios';
 
+// Use relative paths when using proxy, or set base URL
+axios.defaults.baseURL = 'http://localhost:8000';
+
 export default {
   name: 'CrimeMap',
   setup() {

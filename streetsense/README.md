@@ -1,22 +1,23 @@
-Used ChatGPT o1-preview with the prompt 
-    "Please create a web app for me using django as the backend, vue as the front end, postgresql as the database and the google maps api. I want to it to be a single page application which is a map that you can create pins or markers on, so users can create reports of crimes."
+# StreetSense
+This is our StartupProgramming project StreetSense for Fall 2024.
 
-To install Django with REST framework: pip install django djangorestframework psycopg2-binary
+StreetSense is a software application that integrates with Google Maps. Users can report crimes or incidents they witness at specific locations. Other users can then view this information to check if there have been any recently reported crimes, allowing them to plan a different route or exercise caution in certain areas. 
 
-Postgres database currently set up for my local machine @ http://localhost:5432 (Postgres Default)
+## Installing Dependencies
+This application assumes you have the following installed:
+- docker desktop
+- node.js
+- npm
+- git
 
-Installed CORS with : pip install django-cors-headers
+# Start App (from within the streetsense direcctory)
 
-With Node.js and Npm installed, create front end using vue: 
-    npm create vite@latest streetsense_frontend -- --template vue
+    docker-compose up -d --build
 
-Navigate to front end (streetsense_frontend) and : npm install
+    frontend will be available at: 
 
-Install axios and Vue google maps : npm install axios @fawmi/vue-google-maps
+        http://localhost:5173 (Vite/Vue3 default)
 
-Front end is running on http://localhost:5173 (Vite/Vue3 default)
+# Shut Down App
 
-
-To start backend server : python manage.py runserver
-
-To start frontend server: npm run dev
+    docker-compose down -v

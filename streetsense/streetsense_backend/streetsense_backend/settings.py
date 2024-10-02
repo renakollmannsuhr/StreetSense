@@ -56,6 +56,7 @@ MIDDLEWARE = [
 CORS_ALLOWED_ORIGINS = [
     'http://localhost:3000',
     'http://localhost:5173',  # Port where your Vue app will run
+    'http://frontend:5173',  # Docker container name for the Vue app
 ]
 
 ROOT_URLCONF = 'streetsense_backend.urls'
@@ -85,14 +86,13 @@ WSGI_APPLICATION = 'streetsense_backend.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
-        'NAME': 'streetsense_db',
-        'USER': 'test1',
-        'PASSWORD': 'pass123',
-        'HOST': 'localhost',
-        'PORT': '5432',
+        'NAME': 'streetsense', 
+        'USER': 'postgres',  
+        'PASSWORD': '1234',  
+        'HOST': 'db', 
+        'PORT': '5432',  
     }
 }
-
 
 # Password validation
 # https://docs.djangoproject.com/en/5.1/ref/settings/#auth-password-validators
