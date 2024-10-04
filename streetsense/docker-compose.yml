@@ -1,0 +1,46 @@
+version: '3.8'
+
+services:
+  db:
+    image: postgres:latest
+    container_name: postgres_ss
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: 1234
+      POSTGRES_DB: streetsense
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+
+  backend:
+    build:
+      context: ./streetsense_backend
+    command: python manage.py runserver 0.0.0.0:8000
+    volumes:
+      - ./streetsense_backend:/app
+    ports:
+      - '8000:8000'
+    depends_on:
+      - db
+    environment:
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=1234
+      - POSTGRES_DB=streetsense
+      - POSTGRES_HOST=db
+      - POSTGRES_PORT=5432
+
+  frontend:
+    build:
+      context: ./streetsense_frontend_vite
+    command: npm run dev -- --host
+    volumes:
+      - ./streetsense_frontend_vite:/app
+      - /app/node_modules
+    ports:
+      - '5173:5173'
+    depends_on:
+      - backend
+
+volumes:
+  postgres_data:
