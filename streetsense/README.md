@@ -14,6 +14,8 @@ This application assumes you have the following installed:
 
     docker-compose up -d --build
 
+    docker-compose exec backend python manage.py migrate
+
     frontend will be available at: 
 
         http://localhost:5173 (Vite/Vue3 default)

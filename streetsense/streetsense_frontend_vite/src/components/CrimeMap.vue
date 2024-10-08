@@ -11,7 +11,22 @@
         v-for="(report, index) in crimeReports"
         :key="index"
         :position="{ lat: report.latitude, lng: report.longitude }"
-      />
+        @click="showInfoWindow(index)"
+      >
+        <GMapInfoWindow
+          :options="{ maxWidth: 300 }"
+          :opened="openedInfoWindowIndex === index"
+          @closeclick="openedInfoWindowIndex = null"
+        >
+          <div>
+            <h3>{{ report.title }}</h3>
+            <p><strong>Type:</strong> {{ report.type }}</p>
+            <p><strong>Description:</strong> {{ report.description }}</p>
+            <p><strong>Date Reported:</strong> {{ new Date(report.date_reported).toLocaleString() }}</p>
+          </div>
+        </GMapInfoWindow>
+      </GMapMarker>
+
       <!-- New marker added by the user -->
       <GMapMarker
         v-if="newMarker"
@@ -65,6 +80,7 @@ export default {
       title: '',
       description: '',
     });
+    const openedInfoWindowIndex = ref(null);
 
     const fetchCrimeReports = async () => {
       try {
@@ -76,6 +92,14 @@ export default {
     };
 
     const addMarker = (event) => {
+
+      if (openedInfoWindowIndex.value !== null || newMarker.value) {
+        // Close the info window if open
+        openedInfoWindowIndex.value = null;
+        return;
+      }
+
+
       newMarker.value = {
         position: {
           lat: event.latLng.lat(),
@@ -83,6 +107,22 @@ export default {
         },
       };
     };
+
+
+    const onMarkerClick = (index, event) => {
+      // Prevent the map's click handler from being triggered
+      if (event.domEvent && event.domEvent.stopPropagation) {
+        event.domEvent.stopPropagation();
+      }
+
+      openedInfoWindowIndex.value = index;
+    };
+
+
+    const onInfoWindowClose = () => {
+      openedInfoWindowIndex.value = null;
+    };
+
 
     const submitReport = async () => {
       try {
@@ -94,10 +134,13 @@ export default {
           longitude: newMarker.value.position.lng,
         };
         await axios.post('/api/reports/', reportData);
+        // Reset the form
         form.value.title = '';
+        form.value.type = '';
         form.value.description = '';
         newMarker.value = null;
-        fetchCrimeReports();
+        // Fetch updated crime reports
+        await fetchCrimeReports();
       } catch (error) {
         console.error('Error submitting crime report:', error);
       }
@@ -106,7 +149,12 @@ export default {
     const cancelReport = () => {
       newMarker.value = null;
       form.value.title = '';
+      form.value.type = '';
       form.value.description = '';
+    };
+
+    const showInfoWindow = (index) => {
+      openedInfoWindowIndex.value = index;
     };
 
     onMounted(() => {
@@ -121,12 +169,17 @@ export default {
       addMarker,
       submitReport,
       cancelReport,
+      openedInfoWindowIndex,
+      onMarkerClick,
+      onInfoWindowClose,
+      showInfoWindow,
     };
   },
 };
 </script>
 
 <style scoped>
+/* Add any custom styles here */
 .report-form {
   margin-top: 20px;
 }
@@ -145,6 +198,3 @@ export default {
   margin-right: 10px;
 }
 </style>
-
-
-
