@@ -48,6 +48,10 @@
           <input v-model="form.title" required />
         </label>
         <label>
+          Date:
+          <input v-model="form.date" type="datetime-local"/>
+        </label>
+        <label>
           Type:
           <select v-model="form.type">
             <option value="Theft">Theft</option>
@@ -130,9 +134,11 @@ export default {
 
 
     const submitReport = async () => {
+      const utcDate = form.value.date && (new Date(form.value.date)).toISOString()
       try {
         const reportData = {
           title: form.value.title,
+          date_occurred: utcDate,
           type: form.value.type,
           description: form.value.description,
           latitude: newMarker.value.position.lat,

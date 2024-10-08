@@ -7,6 +7,7 @@ class CrimeReport(models.Model):
     latitude = models.FloatField()
     longitude = models.FloatField()
     date_reported = models.DateTimeField(auto_now_add=True)
+    date_occurred = models.DateTimeField(default=None, blank=True, null=True)
 
     def __str__(self):
         return self.title
