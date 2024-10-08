@@ -23,6 +23,11 @@
             <p><strong>Type:</strong> {{ report.type }}</p>
             <p><strong>Description:</strong> {{ report.description }}</p>
             <p><strong>Date Reported:</strong> {{ new Date(report.date_reported).toLocaleString() }}</p>
+            <p><strong>Date Occurred:</strong> {{
+              report.date_occurred
+                ? new Date(report.date_occurred).toLocaleString()
+                : '–'
+            }}</p>
           </div>
         </GMapInfoWindow>
       </GMapMarker>
