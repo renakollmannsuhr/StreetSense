@@ -1,6 +1,6 @@
 <template>
   <div id="app">
-    <h1>StreetSense Crime Reporting Map</h1>
+    <img src="/ss_logo.jpg" alt="StreetSense Logo" class="logo" />
     <CrimeMap /> 
   </div>
 </template>
@@ -22,7 +22,9 @@ body {
   margin: 0;
   padding: 0;
 }
-#app {
-  text-align: center;
+.logo {
+  height: 50px; 
+  width: auto; 
+  margin: 0.2rem;
 }
 </style>
