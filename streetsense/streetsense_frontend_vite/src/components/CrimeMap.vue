@@ -44,7 +44,7 @@
 
     <!-- Form to submit a new crime report -->
     <div v-if="newMarker" class="report-form">
-      <h3 style="color:#295bbe">Report a Crime</h3>
+      <h3 style="color:#295bbe">Report an Incident</h3>
       <form @submit.prevent="submitReport">
         <label>
           Title:
@@ -202,7 +202,7 @@ export default {
 
 /* Map container styles */
 .map-container {
-  width: 100%; 
+  width: 100%;
   height: 500px;
 }
 
