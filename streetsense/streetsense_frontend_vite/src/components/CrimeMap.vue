@@ -146,10 +146,7 @@ export default {
         };
         await axios.post('/api/reports/', reportData);
         // Reset the form
-        form.value.title = '';
-        form.value.type = '';
-        form.value.description = '';
-        newMarker.value = null;
+        cancelReport();
         // Fetch updated crime reports
         await fetchCrimeReports();
       } catch (error) {
@@ -160,6 +157,7 @@ export default {
     const cancelReport = () => {
       newMarker.value = null;
       form.value.title = '';
+      form.value.date = '';
       form.value.type = '';
       form.value.description = '';
     };
