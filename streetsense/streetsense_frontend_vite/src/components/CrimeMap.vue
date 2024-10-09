@@ -23,6 +23,11 @@
             <p><strong>Type:</strong> {{ report.type }}</p>
             <p><strong>Description:</strong> {{ report.description }}</p>
             <p><strong>Date Reported:</strong> {{ new Date(report.date_reported).toLocaleString() }}</p>
+            <p><strong>Date Occurred:</strong> {{
+              report.date_occurred
+                ? new Date(report.date_occurred).toLocaleString()
+                : '–'
+            }}</p>
           </div>
         </GMapInfoWindow>
       </GMapMarker>
@@ -141,10 +146,7 @@ export default {
         };
         await axios.post('/api/reports/', reportData);
         // Reset the form
-        form.value.title = '';
-        form.value.type = '';
-        form.value.description = '';
-        newMarker.value = null;
+        cancelReport();
         // Fetch updated crime reports
         await fetchCrimeReports();
       } catch (error) {
@@ -155,6 +157,7 @@ export default {
     const cancelReport = () => {
       newMarker.value = null;
       form.value.title = '';
+      form.value.date = '';
       form.value.type = '';
       form.value.description = '';
     };
