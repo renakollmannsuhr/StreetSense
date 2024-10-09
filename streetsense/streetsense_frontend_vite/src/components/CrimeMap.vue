@@ -1,42 +1,50 @@
 <template>
   <div>
-    <GMapMap
-      :center="mapCenter"
-      :zoom="12"
-      style="width: 100%; height: 500px"
-      @click="addMarker"
-    >
-      <!-- Existing crime reports -->
-      <GMapMarker
-        v-for="(report, index) in crimeReports"
-        :key="index"
-        :position="{ lat: report.latitude, lng: report.longitude }"
-        @click="showInfoWindow(index)"
-      >
-        <GMapInfoWindow
-          :options="{ maxWidth: 300 }"
-          :opened="openedInfoWindowIndex === index"
-          @closeclick="openedInfoWindowIndex = null"
+    <div :class="['container', { 'has-form': newMarker }]">
+      <div class="map-container">
+        <GMapMap
+          :center="mapCenter"
+          :zoom="12"
+          style="width: 100%; height: 900px"
+          @click="addMarker"
         >
-          <div>
-            <h3>{{ report.title }}</h3>
-            <p><strong>Type:</strong> {{ report.type }}</p>
-            <p><strong>Description:</strong> {{ report.description }}</p>
-            <p><strong>Date Reported:</strong> {{ new Date(report.date_reported).toLocaleString() }}</p>
-          </div>
-        </GMapInfoWindow>
-      </GMapMarker>
+          <!-- Existing crime reports -->
+          <GMapMarker
+            v-for="(report, index) in crimeReports"
+            :key="index"
+            :position="{ lat: report.latitude, lng: report.longitude }"
+            @click="showInfoWindow(index)"
+          >
+            <GMapInfoWindow
+              :options="{ maxWidth: 300 }"
+              :opened="openedInfoWindowIndex === index"
+              @closeclick="openedInfoWindowIndex = null"
+            >
+              <div>
+                <h3>{{ report.title }}</h3>
+                <p><strong>Type:</strong> {{ report.type }}</p>
+                <p><strong>Description:</strong> {{ report.description }}</p>
+                <p><strong>Date Reported:</strong> {{ new Date(report.date_reported).toLocaleString() }}</p>
+                <p><strong>Date Occurred:</strong> {{
+                  report.date_occurred
+                    ? new Date(report.date_occurred).toLocaleString()
+                    : '–'
+                }}</p>
+              </div>
+            </GMapInfoWindow>
+          </GMapMarker>
 
-      <!-- New marker added by the user -->
-      <GMapMarker
-        v-if="newMarker"
-        :position="newMarker.position"
-      />
-    </GMapMap>
+          <!-- New marker added by the user -->
+          <GMapMarker
+            v-if="newMarker"
+            :position="newMarker.position"
+          />
+        </GMapMap>
+      </div>
 
     <!-- Form to submit a new crime report -->
     <div v-if="newMarker" class="report-form">
-      <h3>Report a Crime</h3>
+      <h3 style="color:#295bbe">Report a Crime</h3>
       <form @submit.prevent="submitReport">
         <label>
           Title:
@@ -63,6 +71,7 @@
         <button type="submit">Submit Report</button>
         <button type="button" @click="cancelReport">Cancel</button>
       </form>
+      </div>
     </div>
   </div>
 </template>
@@ -103,7 +112,6 @@ export default {
         return;
       }
 
-
       newMarker.value = {
         position: {
           lat: event.latLng.lat(),
@@ -141,10 +149,7 @@ export default {
         };
         await axios.post('/api/reports/', reportData);
         // Reset the form
-        form.value.title = '';
-        form.value.type = '';
-        form.value.description = '';
-        newMarker.value = null;
+        cancelReport();
         // Fetch updated crime reports
         await fetchCrimeReports();
       } catch (error) {
@@ -155,6 +160,7 @@ export default {
     const cancelReport = () => {
       newMarker.value = null;
       form.value.title = '';
+      form.value.date = '';
       form.value.type = '';
       form.value.description = '';
     };
@@ -186,9 +192,35 @@ export default {
 
 <style scoped>
 /* Add any custom styles here */
-.report-form {
-  margin-top: 20px;
+
+.container {
+  display: flex;
+  justify-content: space-between;
+  flex-direction: row-reverse;
+  width: 100%;
 }
+
+/* Map container styles */
+.map-container {
+  width: 100%; 
+  height: 500px;
+}
+
+.container.has-form .map-container {
+  width: 70%;
+}
+
+.container.has-form .report-form {
+  display: block;;
+}
+
+.report-form {
+  display: none;
+  width: 30%; /* The form will take 30% of the space when visible */
+  padding: 20px;
+  box-sizing: border-box;
+}
+
 .report-form label {
   display: block;
   margin-bottom: 10px;
