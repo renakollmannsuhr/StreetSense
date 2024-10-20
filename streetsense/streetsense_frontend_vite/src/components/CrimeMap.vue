@@ -1,82 +1,33 @@
+<!--HTML-->
+
 <template>
-  <div>
-    <div :class="['container', { 'has-form': newMarker }]">
-      <div class="map-container">
-        <GMapMap
-          :center="mapCenter"
-          :zoom="12"
-          style="width: 100%; height: 900px"
-          @click="addMarker"
-        >
-          <!-- Existing crime reports -->
-          <GMapMarker
-            v-for="(report, index) in crimeReports"
-            :key="index"
-            :position="{ lat: report.latitude, lng: report.longitude }"
-            @click="showInfoWindow(index)"
-          >
-            <GMapInfoWindow
-              :options="{ maxWidth: 300 }"
-              :opened="openedInfoWindowIndex === index"
-              @closeclick="openedInfoWindowIndex = null"
-            >
-              <div>
-                <h3>{{ report.title }}</h3>
-                <p><strong>Type:</strong> {{ report.type }}</p>
-                <p><strong>Description:</strong> {{ report.description }}</p>
-                <p><strong>Date Reported:</strong> {{ new Date(report.date_reported).toLocaleString() }}</p>
-                <p><strong>Date Occurred:</strong> {{
-                  report.date_occurred
-                    ? new Date(report.date_occurred).toLocaleString()
-                    : '–'
-                }}</p>
-              </div>
-            </GMapInfoWindow>
-          </GMapMarker>
+  <div class="map-container">
+    <GMapMap
+      :center="mapCenter"
+      :zoom="16"
+      :options="mapOptions"
+      style="width: 100%; height: 100vh;"
+    >
+       <!-- Add user location marker -->
+       <GMapMarker
+        v-if="userLocation"
+        :position="userLocation"
+        :icon="userIcon"
+      ></GMapMarker>
+    </GMapMap>
 
-          <!-- New marker added by the user -->
-          <GMapMarker
-            v-if="newMarker"
-            :position="newMarker.position"
-          />
-        </GMapMap>
-      </div>
-
-    <!-- Form to submit a new crime report -->
-    <div v-if="newMarker" class="report-form">
-      <h3 style="color:#295bbe">Report an Incident</h3>
-      <form @submit.prevent="submitReport">
-        <label>
-          Title:
-          <input v-model="form.title" required />
-        </label>
-        <label>
-          Date:
-          <input v-model="form.date" type="datetime-local"/>
-        </label>
-        <label>
-          Type:
-          <select v-model="form.type">
-            <option value="Theft">Theft</option>
-            <option value="Assault">Assault</option>
-            <option value="Disturbance">Disturbance</option>
-            <option value="Property Damage">Property Damage</option>
-            <option value="Other">Other</option>
-          </select>
-        </label>
-        <label>
-          Description:
-          <textarea v-model="form.description" required></textarea>
-        </label>
-        <button type="submit">Submit Report</button>
-        <button type="button" @click="cancelReport">Cancel</button>
-      </form>
-      </div>
-    </div>
+    <!-- Button to request user location -->
+    <button class="location-button" @click="getUserLocation">
+      Show My Location
+    </button>
   </div>
 </template>
 
 <script>
+
+
+// JAVASCRIPT
+
 import { ref, onMounted } from 'vue';
 import axios from 'axios';
 
@@ -87,111 +38,73 @@ export default {
   name: 'CrimeMap',
   setup() {
     const mapCenter = ref({ lat: 48.4359, lng: -123.35155 }); // Victoria, B.C
-    const crimeReports = ref([]);
-    const newMarker = ref(null);
-    const form = ref({
-      title: '',
-      description: '',
-    });
-    const openedInfoWindowIndex = ref(null);
+    const userLocation = ref(null); // To store the user's location
 
-    const fetchCrimeReports = async () => {
-      try {
-        const response = await axios.get('/api/reports/');
-        crimeReports.value = response.data;
-      } catch (error) {
-        console.error('Error fetching crime reports:', error);
+    const mapOptions = {
+      disableDefaultUI: true,       // Enable default UI controls
+      zoomControl: false,            // Remove zoom control (+/- buttons)
+      streetViewControl: false,      // Remove Street View pegman
+      mapTypeControl: false,         // Remove map/satellite toggle
+      fullscreenControl: false,      // Remove fullscreen button
+      keyboardShortcuts: false,      // Disable keyboard shortcuts
+      scaleControl: false,           // Remove scale control
+      rotateControl: false,          // Remove rotate control
+    };
+
+    const getUserLocation = () => {
+      if (navigator.geolocation) {
+        navigator.geolocation.getCurrentPosition(
+          (position) => {
+            userLocation.value = {
+              lat: position.coords.latitude,
+              lng: position.coords.longitude,
+            };
+            // Optionally, center the map on the user's location
+            mapCenter.value = userLocation.value;
+          },
+          (error) => {
+            console.error('Error getting user location:', error);
+          }
+        );
+      } else {
+        console.error('Geolocation is not supported by this browser.');
       }
     };
 
-    const addMarker = (event) => {
+    // onMounted(() => {
 
-      if (openedInfoWindowIndex.value !== null || newMarker.value) {
-        // Close the info window if open
-        openedInfoWindowIndex.value = null;
-        return;
-      }
+    // });
 
-      newMarker.value = {
-        position: {
-          lat: event.latLng.lat(),
-          lng: event.latLng.lng(),
-        },
-      };
+
+
+    const userIcon = {
+      url: '/user_icon.png', // Replace with the path to your custom user icon
+      scaledSize: { width: 60, height: 60 }, // Adjust size as needed
     };
 
 
-    const onMarkerClick = (index, event) => {
-      // Prevent the map's click handler from being triggered
-      if (event.domEvent && event.domEvent.stopPropagation) {
-        event.domEvent.stopPropagation();
-      }
-
-      openedInfoWindowIndex.value = index;
+    // Define icons for different disturbance types
+    const icons = {
+      Theft: '/theft_icon.png',
+      Assault: '/fight_icon.png',
+      Disturbance:'/disturbance_icon.png',
+      'Property Damage': '/vandalism_icon.png',
     };
 
-
-    const onInfoWindowClose = () => {
-      openedInfoWindowIndex.value = null;
-    };
-
-
-    const submitReport = async () => {
-      const utcDate = form.value.date && (new Date(form.value.date)).toISOString()
-      try {
-        const reportData = {
-          title: form.value.title,
-          date_occurred: utcDate,
-          type: form.value.type,
-          description: form.value.description,
-          latitude: newMarker.value.position.lat,
-          longitude: newMarker.value.position.lng,
-        };
-        await axios.post('/api/reports/', reportData);
-        // Reset the form
-        cancelReport();
-        // Fetch updated crime reports
-        await fetchCrimeReports();
-      } catch (error) {
-        console.error('Error submitting crime report:', error);
-      }
-    };
-
-    const cancelReport = () => {
-      newMarker.value = null;
-      form.value.title = '';
-      form.value.date = '';
-      form.value.type = '';
-      form.value.description = '';
-    };
-
-    const showInfoWindow = (index) => {
-      openedInfoWindowIndex.value = index;
-    };
-
-    onMounted(() => {
-      fetchCrimeReports();
-    });
-
+    
     return {
       mapCenter,
-      crimeReports,
-      newMarker,
-      form,
-      addMarker,
-      submitReport,
-      cancelReport,
-      openedInfoWindowIndex,
-      onMarkerClick,
-      onInfoWindowClose,
-      showInfoWindow,
+      mapOptions,
+      userLocation,
+      userIcon,
+      getUserLocation
     };
   },
 };
 </script>
 
 <style scoped>
-/* Add any custom styles here */
+/* CSS */
 
 .container {
   display: flex;
@@ -203,36 +116,25 @@ export default {
 /* Map container styles */
 .map-container {
   width: 100%;
-  height: 500px;
+  height: 100vh;
 }
 
-.container.has-form .map-container {
-  width: 70%;
+
+.location-button {
+  position: absolute;
+  bottom: 20px;
+  left: 20px;
+  padding: 12px 16px;
+  font-size: 16px;
+  background-color: #007bff;
+  color: #fff;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  z-index: 1000; /* Ensure the button appears above the map */
 }
 
-.container.has-form .report-form {
-  display: block;;
-}
-
-.report-form {
-  display: none;
-  width: 30%; /* The form will take 30% of the space when visible */
-  padding: 20px;
-  box-sizing: border-box;
-}
-
-.report-form label {
-  display: block;
-  margin-bottom: 10px;
-}
-.report-form input,
-.report-form textarea {
-  width: 100%;
-  padding: 8px;
-  margin-top: 4px;
-  box-sizing: border-box;
-}
-.report-form button {
-  margin-right: 10px;
+.location-button:hover {
+  background-color: #0056b3;
 }
 </style>
