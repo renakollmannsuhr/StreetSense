@@ -24,8 +24,6 @@ This application assumes you have the following installed:
 
     docker-compose down -v
 
-
-
 # Database command
 
     docker exec -it postgres_ss psql -U postgres -d streetsense
