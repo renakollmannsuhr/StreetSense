@@ -1,7 +1,11 @@
 <template>
   <div id="app">
-    <img src="/ss_logo.jpg" alt="StreetSense Logo" class="logo" />
-    <CrimeMap /> 
+    <div class="map-wrapper">
+      <CrimeMap /> 
+      <div class="logo-bar">
+        <img src="/ss_logo.jpg" alt="StreetSense Logo" class="logo" />
+      </div>
+    </div>
   </div>
 </template>
 
@@ -16,15 +20,34 @@ export default {
 }
 </script>
 
-<style>
+<style scoped>
+
 body {
   font-family: Arial, sans-serif;
   margin: 0;
   padding: 0;
 }
+
+.map-wrapper {
+  position: relative;
+}
+
+.logo-bar {
+  position: absolute;
+  top: 0;
+  width: 100%;
+  /* Optional: Add background color to the bar */
+  background-color: rgb(244, 244, 244, 0);
+  /* Adjust alignment and padding */
+  display: flex;
+  align-items: center;
+  padding: 0.5rem;
+  z-index: 1000; /* Ensure the logo bar appears above the map */
+}
+
 .logo {
   height: 50px; 
   width: auto; 
-  margin: 0.2rem;
+  margin-left: 0.5rem;
 }
 </style>
