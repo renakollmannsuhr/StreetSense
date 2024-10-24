@@ -1,5 +1,3 @@
-<!--HTML-->
-
 <template>
   <div class="map-container">
     <GMapMap
@@ -24,9 +22,6 @@
 </template>
 
 <script>
-
-
-// JAVASCRIPT
 
 import { ref, onMounted } from 'vue';
 import axios from 'axios';
@@ -70,12 +65,6 @@ export default {
         console.error('Geolocation is not supported by this browser.');
       }
     };
-
-    // onMounted(() => {
-
-    // });
-
-
 
     const userIcon = {
       url: '/user_icon.png', // Replace with the path to your custom user icon

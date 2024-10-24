@@ -36,9 +36,7 @@ body {
   position: absolute;
   top: 0;
   width: 100%;
-  /* Optional: Add background color to the bar */
   background-color: rgb(244, 244, 244, 0);
-  /* Adjust alignment and padding */
   display: flex;
   align-items: center;
   padding: 0.5rem;
