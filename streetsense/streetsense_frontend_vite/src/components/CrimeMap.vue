@@ -8,11 +8,19 @@
       :options="mapOptions"
       style="width: 100%; height: 100vh;"
     >
-       <!-- Add user location marker -->
-       <GMapMarker
+      <!-- Add user location marker -->
+      <GMapMarker
         v-if="userLocation"
         :position="userLocation"
         :icon="userIcon"
+      ></GMapMarker>
+
+      <!-- Add selected marker -->
+      <GMapMarker
+        v-for="marker in markers"
+        :key="marker.id"
+        :position="{ lat: marker.latitude, lng: marker.longitude }"
+        :icon="icons[marker.type]"
       ></GMapMarker>
     </GMapMap>
 
@@ -20,36 +28,59 @@
     <button class="location-button" @click="getUserLocation">
       Show My Location
     </button>
+
+    <!-- Plus button to choose marker -->
+    <button class="plus-button" @click="toggleMarkerMenu">
+      +
+    </button>
+
+    <!-- Marker selection menu -->
+    <div v-if="showMarkerMenu" class="marker-menu">
+      <button @click="selectMarker('theft')">Theft</button>
+      <button @click="selectMarker('assault')">Assault</button>
+      <button @click="selectMarker('disturbance')">Disturbance</button>
+      <button @click="selectMarker('propertyDamage')">Property Damage</button>
+    </div>
   </div>
 </template>
 
 <script>
-
-
-// JAVASCRIPT
-
 import { ref, onMounted } from 'vue';
 import axios from 'axios';
 
 // Use relative paths when using proxy, or set base URL
 axios.defaults.baseURL = 'http://localhost:8000';
 
+
 export default {
   name: 'CrimeMap',
   setup() {
-    const mapCenter = ref({ lat: 48.4359, lng: -123.35155 }); // Victoria, B.C
-    const userLocation = ref(null); // To store the user's location
+    const mapCenter = ref({ lat: 48.4359, lng: -123.35155 });
+    const userLocation = ref(null);
+    const selectedMarker = ref(null);
+    const showMarkerMenu = ref(false);
+    const markers = ref([]);
 
     const mapOptions = {
-      disableDefaultUI: true,       // Enable default UI controls
-      zoomControl: false,            // Remove zoom control (+/- buttons)
-      streetViewControl: false,      // Remove Street View pegman
-      mapTypeControl: false,         // Remove map/satellite toggle
-      fullscreenControl: false,      // Remove fullscreen button
-      keyboardShortcuts: false,      // Disable keyboard shortcuts
-      scaleControl: false,           // Remove scale control
-      rotateControl: false,          // Remove rotate control
+      disableDefaultUI: true,
+      zoomControl: false,
+      streetViewControl: false,
+      mapTypeControl: false,
+      fullscreenControl: false,
+      keyboardShortcuts: false,
+      scaleControl: false,
+      rotateControl: false,
     };
+
+    onMounted(async () => {
+      try {
+        const response = await axios.get('/api/reports/');
+        markers.value = response.data;
+      } catch (error) {
+        console.error('Error fetching markers:', error);
+      }
+    });
+
 
     const getUserLocation = () => {
       if (navigator.geolocation) {
@@ -59,7 +90,6 @@ export default {
               lat: position.coords.latitude,
               lng: position.coords.longitude,
             };
-            // Optionally, center the map on the user's location
             mapCenter.value = userLocation.value;
           },
           (error) => {
@@ -71,54 +101,85 @@ export default {
       }
     };
 
-    // onMounted(() => {
-
-    // });
-
-
-
     const userIcon = {
-      url: '/user_icon.png', // Replace with the path to your custom user icon
-      scaledSize: { width: 60, height: 60 }, // Adjust size as needed
+      url: '/user_icon.png',
+      scaledSize: { width: 60, height: 60 },
     };
 
-
-    // Define icons for different disturbance types
     const icons = {
-      Theft: '/theft_icon.png',
-      Assault: '/fight_icon.png',
-      Disturbance:'/disturbance_icon.png',
-      'Property Damage': '/vandalism_icon.png',
+      theft: {
+        url: '/theft_icon.png',
+        scaledSize: { width: 30, height: 30 } // Adjust size as needed
+      },
+      assault: {
+        url: '/fight_icon.png',
+        scaledSize: { width: 30, height: 30 } // Adjust size as needed
+      },
+      disturbance: {
+        url: '/disturbance_icon.png',
+        scaledSize: { width: 30, height: 30 } // Adjust size as needed
+      },
+      propertyDamage: {
+        url: '/vandalism_icon.png',
+        scaledSize: { width: 30, height: 30 } // Adjust size as needed
+      },
     };
 
-    
+    const toggleMarkerMenu = () => {
+      showMarkerMenu.value = !showMarkerMenu.value;
+    };
+
+    const selectMarker = (type) => {
+      selectedMarker.value = icons[type];
+      showMarkerMenu.value = false;
+
+      // Capture marker details
+      const markerDetails = {
+        title: type,
+        type: type,
+        latitude: userLocation.value.lat,
+        longitude: userLocation.value.lng,
+        description: `${type} reported at this location.`
+      };
+
+      // Send marker details to backend
+      submitMarker(markerDetails);
+    };
+
+    const submitMarker = async (markerDetails) => {
+      try {
+        const response = await axios.post('/api/reports/', markerDetails);
+        markers.value.push(response.data); // Add the new marker to the list
+        alert('Marker saved successfully!');
+      } catch (error) {
+        console.error('Error saving marker:', error);
+      }
+    };
+
     return {
       mapCenter,
       mapOptions,
       userLocation,
       userIcon,
-      getUserLocation
+      getUserLocation,
+      selectedMarker,
+      showMarkerMenu,
+      toggleMarkerMenu,
+      selectMarker,
+      submitMarker,
+      markers,
+      onMounted,
+      icons,
     };
   },
 };
 </script>
 
 <style scoped>
-/* CSS */
-
-.container {
-  display: flex;
-  justify-content: space-between;
-  flex-direction: row-reverse;
-  width: 100%;
-}
-
-/* Map container styles */
 .map-container {
   width: 100%;
   height: 100vh;
 }
-
 
 .location-button {
   position: absolute;
@@ -131,10 +192,53 @@ export default {
   border: none;
   border-radius: 4px;
   cursor: pointer;
-  z-index: 1000; /* Ensure the button appears above the map */
+  z-index: 1000;
 }
 
 .location-button:hover {
   background-color: #0056b3;
+}
+
+.plus-button {
+  position: absolute;
+  bottom: 20px;
+  right: 20px;
+  padding: 12px 16px;
+  font-size: 24px;
+  background-color: #28a745;
+  color: #fff;
+  border: none;
+  border-radius: 50%;
+  cursor: pointer;
+  z-index: 1000;
+}
+
+.plus-button:hover {
+  background-color: #218838;
+}
+
+.marker-menu {
+  position: absolute;
+  bottom: 80px;
+  right: 20px;
+  background-color: #fff;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  z-index: 1000;
+}
+
+.marker-menu button {
+  display: block;
+  width: 100%;
+  padding: 10px;
+  border: none;
+  background: none;
+  cursor: pointer;
+  text-align: left;
+}
+
+.marker-menu button:hover {
+  background-color: #f0f0f0;
 }
 </style>
