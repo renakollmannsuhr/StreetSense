@@ -1,1 +1,1 @@
-web: gunicorn streetsense.wsgi --log-file -
+web: gunicorn streetsense_backend.wsgi --log-file -
