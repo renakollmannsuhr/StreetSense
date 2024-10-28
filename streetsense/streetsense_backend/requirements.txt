@@ -3,5 +3,5 @@ djangorestframework
 psycopg2-binary
 django-cors-headers
 gunicorn
-django-environ
+python-dotenv
 # ... other dependencies

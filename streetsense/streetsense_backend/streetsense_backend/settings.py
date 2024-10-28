@@ -11,7 +11,8 @@ https://docs.djangoproject.com/en/5.1/ref/settings/
 """
 
 from pathlib import Path
-from environ import environ
+from dotenv import load_dotenv
+load_dotenv()
 import os
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
@@ -21,18 +22,19 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/5.1/howto/deployment/checklist/
 
-# Initialize environment variables
-env = environ.Env()
-environ.Env.read_env(os.path.join(BASE_DIR, '.env'))
+# SECURITY WARNING: comment this out when pushing to production
+SECRET_KEY = os.environ.get('SECRET_KEY')
 
-# Reference the SECRET_KEY from the .env file
-SECRET_KEY = env('SECRET_KEY')
-
-# SECURITY WARNING: don't run with debug turned on in production!
+# SECURITY WARNING: turn this to false when pushing to production
 DEBUG = True
 
-ALLOWED_HOSTS = []
-
+if DEBUG:
+    ALLOWED_HOSTS = ['*']
+else:
+    ALLOWED_HOSTS = [
+        'your-app-name.herokuapp.com',
+        'www.your-custom-domain.com', 
+    ]
 
 # Application definition
 
@@ -135,6 +137,7 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/5.1/howto/static-files/
 
 STATIC_URL = 'static/'
+STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/5.1/ref/settings/#default-auto-field
