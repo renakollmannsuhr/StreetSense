@@ -49,7 +49,8 @@ import { ref, onMounted } from 'vue';
 import axios from 'axios';
 
 // Use relative paths when using proxy, or set base URL
-axios.defaults.baseURL = 'http://localhost:8000';
+//axios.defaults.baseURL = 'http://localhost:8000'; // dev mode
+axios.defaults.baseURL = 'https://streetsense-ae65da49a77f.herokuapp.com'; // production mode
 
 
 export default {
@@ -74,6 +75,7 @@ export default {
 
     onMounted(async () => {
       try {
+        console.log('Fetching markers...');
         const response = await axios.get('/api/reports/');
         markers.value = response.data;
       } catch (error) {
