@@ -177,8 +177,14 @@ export default {
 
 <style scoped>
 .map-container {
-  width: 100%;
-  height: 100vh;
+  width: 102vw; /* Slightly larger than the viewport */
+  height: 102vh; /* Slightly larger than the viewport */
+  margin: 0;
+  padding: 0;
+  touch-action: none; /* Prevent dragging */
+  position: relative; /* Ensure it stays within the parent container */
+  left: -1vw; /* Center the map by shifting it left */
+  top: 0vh; /* Center the map by shifting it up */
 }
 
 .location-button {
@@ -205,7 +211,7 @@ export default {
   right: 20px;
   padding: 12px 16px;
   font-size: 24px;
-  background-color: #28a745;
+  background-color: #007bff;
   color: #fff;
   border: none;
   border-radius: 50%;
@@ -214,7 +220,7 @@ export default {
 }
 
 .plus-button:hover {
-  background-color: #218838;
+  background-color: #0056b3;
 }
 
 .marker-menu {
@@ -242,3 +248,4 @@ export default {
   background-color: #f0f0f0;
 }
 </style>
+

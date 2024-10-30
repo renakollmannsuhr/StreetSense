@@ -43,11 +43,17 @@ body {
   align-items: center;
   padding: 0.5rem;
   z-index: 1000; /* Ensure the logo bar appears above the map */
+  pointer-events: none; /* Prevent dragging */
+  touch-action: none; /* Prevent dragging */
 }
 
 .logo {
   height: 50px; 
   width: auto; 
   margin-left: 0.5rem;
+}
+
+.gm-style-iw {
+  pointer-events: none; /* Disable pointer events on the info window */
 }
 </style>
