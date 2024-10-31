@@ -36,12 +36,11 @@
       +
     </button>
 
-    <!-- Marker selection menu -->
-    <div v-if="showMarkerMenu" class="marker-menu">
-      <button @click="selectMarker('theft')">Theft</button>
-      <button @click="selectMarker('assault')">Assault</button>
-      <button @click="selectMarker('disturbance')">Disturbance</button>
-      <button @click="selectMarker('propertyDamage')">Property Damage</button>
+    <!-- Marker selection buttons -->
+    <div v-if="showMarkerMenu" class="marker-buttons">
+      <button v-for="(icon, type) in icons" :key="type" @click="selectMarker(type)">
+        <img :src="icon.url" :alt="type" class="marker-icon" />
+      </button>
     </div>
   </div>
 </template>
@@ -236,29 +235,19 @@ export default {
   background-color: #0056b3;
 }
 
-.marker-menu {
+.marker-buttons {
   position: absolute;
-  bottom: 80px;
-  right: 20px;
-  background-color: #fff;
-  border: 1px solid #ccc;
-  border-radius: 4px;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  bottom: 150px; /* Adjust as needed to position above the plus button */
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  gap: 10px; /* Space between buttons */
   z-index: 1000;
 }
 
-.marker-menu button {
-  display: block;
-  width: 100%;
-  padding: 10px;
-  border: none;
-  background: none;
-  cursor: pointer;
-  text-align: left;
-}
-
-.marker-menu button:hover {
-  background-color: #f0f0f0;
+.marker-icon {
+  width: 30px; /* Adjust size as needed */
+  height: 30px;
 }
 </style>
 
