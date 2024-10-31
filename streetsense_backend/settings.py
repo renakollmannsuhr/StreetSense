@@ -34,7 +34,8 @@ if DEBUG:
 else:
     ALLOWED_HOSTS = [
         'streetsense-ae65da49a77f.herokuapp.com',
-        'www.streetsense.com', 
+        'www.streetsense.live', 
+        'streetsense.live',
     ]
 
 # Application definition
