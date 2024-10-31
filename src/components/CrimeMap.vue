@@ -26,7 +26,9 @@
 
     <!-- Button to request user location -->
     <button class="location-button" @click="getUserLocation">
-      Show My Location
+      <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-navigation">
+        <polygon points="3 11 22 2 13 21 11 13 3 11"></polygon>
+      </svg>
     </button>
 
     <!-- Plus button to choose marker -->
@@ -191,14 +193,18 @@ export default {
 
 .location-button {
   position: absolute;
-  bottom: 20px;
-  left: 20px;
-  padding: 12px 16px;
-  font-size: 16px;
+  top: 50%; /* Position halfway down the screen */
+  right: 20px; /* Position on the right side */
+  transform: translateY(-50%); /* Center the button vertically */
+  width: 50px;
+  height: 50px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
   background-color: #007bff;
   color: #fff;
   border: none;
-  border-radius: 4px;
+  border-radius: 8px; /* Rounded edges */
   cursor: pointer;
   z-index: 1000;
 }
@@ -209,14 +215,19 @@ export default {
 
 .plus-button {
   position: absolute;
-  bottom: 20px;
-  right: 20px;
-  padding: 12px 16px;
-  font-size: 24px;
+  bottom: 10%; /* Position 1/4 up from the bottom */
+  left: 50%; /* Center horizontally */
+  transform: translateX(-50%); /* Adjust for the button's width */
+  width: 70px; /* Increase width */
+  height: 70px; /* Increase height */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 40px; /* Increase font size for the plus icon */
   background-color: #007bff;
   color: #fff;
   border: none;
-  border-radius: 50%;
+  border-radius: 50%; /* Ensure it's a circle */
   cursor: pointer;
   z-index: 1000;
 }
