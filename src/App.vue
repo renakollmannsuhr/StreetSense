@@ -1,16 +1,16 @@
 <template>
   <div id="app">
     <div class="map-wrapper">
-      <CrimeMap /> 
+      <CrimeMap />
       <div class="logo-bar">
-        <img src="/ss_logo.jpg" alt="StreetSense Logo" class="logo" />
+        <img src="/StreetSenseLogo.png" alt="StreetSense Logo" class="logo" />
       </div>
     </div>
   </div>
 </template>
 
 <script>
-import CrimeMap from './components/CrimeMap.vue'  
+import CrimeMap from './components/CrimeMap.vue'
 
 export default {
   name: 'App',
@@ -48,8 +48,8 @@ body {
 }
 
 .logo {
-  height: 50px; 
-  width: auto; 
+  height: 50px;
+  width: auto;
   margin-left: 0.5rem;
 }
 
