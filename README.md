@@ -28,7 +28,7 @@ Please view the following Google Drive folder to find:
 
 Documents are organized by assignment/milestone deliverable.
 
-[Google Drive link](https://drive.google.com/drive/folders/1W2iV3MWGx_8mnkRk0J0EOlWDbFJizGsx?usp=sharing_
+[Google Drive link](https://drive.google.com/drive/folders/1W2iV3MWGx_8mnkRk0J0EOlWDbFJizGsx?usp=sharing_)
 
 # GitHub Project
 Please see the following link to view project task tacking (Backlog View) and project road map (Roadmap View).
@@ -68,4 +68,4 @@ This application assumes you have the following installed:
                            Version 2.0, January 2004
                         http://www.apache.org/licenses/
     
-Please see [License Text document](LICENSE.txt) for more details
+Please see [License Text document](LICENSE) for more details
