@@ -14,6 +14,7 @@ This project is a collborative task between Nikolas Johnson (CSC), Callum Rush (
 # Wiki Page
 
 # GitHub Project Link
+https://github.com/users/renakollmannsuhr/projects/1/views/1
 
 # Running the app locally
 ### Local Dependencies
