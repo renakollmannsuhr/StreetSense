@@ -12,6 +12,13 @@ This project is a collborative task between Nikolas Johnson (CSC), Callum Rush (
 
 ** please ensure to enable location tracking on your device and your browser
 
+# Product Page
+
+Our current product page draft is available at www.streetsense.live/product
+
+This page is still a work in progress.
+As our app's main feature is a map view, we modeled it after other apps like [Open Street Maps](https://www.openstreetmap.org/about) where the user initially lands on the map view of the app and then can click an 'About' link to access the product page. We are still working on implmenting this 'About' link on our map landing page.
+
 # Milestone Slide Decks
 [Canva presentation slides link](https://www.canva.com/design/DAGVAQP41qc/utRE8anDTQa0y_yQQfE_Sg/edit?utm_content=DAGVAQP41qc&utm_campaign=designshare&utm_medium=link2&utm_source=sharebutton)
 
