@@ -270,9 +270,10 @@ export default {
   display: flex;
   justify-content: center;
   align-items: center;
-  font-size: 40px; /* Increase font size for the plus icon */
+  font-size: 50px; /* Increase font size for the plus icon */
   background-color: #007bff;
   color: #fff;
+  padding-top: 0;
   border: none;
   border-radius: 50%; /* Ensure it's a circle */
   cursor: pointer;
@@ -311,6 +312,7 @@ export default {
   font-size: 50px; /* Increase font size for the plus icon */
   background-color: #007bff;
   color: #fff;
+  padding-top: 0;
   border: none;
   border-radius: 50%; /* Ensure it's a circle */
   cursor: pointer;
