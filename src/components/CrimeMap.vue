@@ -16,12 +16,13 @@
       ></GMapMarker>
 
       <!-- Add selected marker -->
-      <GMapMarker
-        v-for="marker in markers"
-        :key="marker.id"
-        :position="{ lat: marker.latitude, lng: marker.longitude }"
-        :icon="icons[marker.type]"
-      ></GMapMarker>
+      <template v-for="marker in markers" :key="marker.id">
+        <GMapMarker
+          v-if="filterByTypes[marker.type]"
+          :position="{ lat: marker.latitude, lng: marker.longitude }"
+          :icon="incidenceTypes[marker.type].icon"
+        />
+      </template>
     </GMapMap>
 
     <!-- Button to request user location -->
@@ -38,10 +39,31 @@
 
     <!-- Marker selection buttons -->
     <div v-if="showMarkerMenu" class="marker-buttons">
-      <button v-for="(icon, type) in icons" :key="type" @click="selectMarker(type)">
-        <img :src="icon.url" :alt="type" class="marker-icon" />
+      <button v-for="(incidenceType, type) in incidenceTypes" :key="type" @click="selectMarker(type)">
+        <img :src="incidenceType.icon.url" :alt="incidenceType.name" class="marker-icon" />
       </button>
     </div>
+
+    <!-- Filter button -->
+    <button class="filter-button" @click="toggleFilterMenu">
+      ⚙
+    </button>
+
+    <!-- Filter options -->
+    <div v-if="showFilterMenu" class="filter-options">
+      <div v-for="(incidenceType, type) in incidenceTypes" :key="type">
+        <input type="checkbox"
+          :name="'enable_' + type"
+          :checked="filterByTypes[type]"
+          @change="event => filterByTypes[type] = event.target.checked"
+        >
+        <label :for="'enable_' + type">
+          <img :src="incidenceType.icon.url" :alt="incidenceType.name" class="filter-icon" />
+          {{incidenceType.name}}
+        </label>
+      </div>
+    </div>
+
   </div>
 </template>
 
@@ -62,6 +84,13 @@ export default {
     const selectedMarker = ref(null);
     const showMarkerMenu = ref(false);
     const markers = ref([]);
+    const showFilterMenu = ref(false);
+    const filterByTypes = ref({
+      theft: true,
+      assault: true,
+      disturbance: true,
+      propertyDamage: true
+    });
 
     const mapOptions = {
       disableDefaultUI: true,
@@ -109,22 +138,34 @@ export default {
       scaledSize: { width: 60, height: 60 },
     };
 
-    const icons = {
+    const incidenceTypes = {
       theft: {
-        url: '/theft_icon.png',
-        scaledSize: { width: 30, height: 30 } // Adjust size as needed
+        name: 'Theft',
+        icon: {
+          url: '/theft_icon.png',
+          scaledSize: { width: 30, height: 30 } // Adjust size as needed
+        }
       },
       assault: {
-        url: '/fight_icon.png',
-        scaledSize: { width: 30, height: 30 } // Adjust size as needed
+        name: 'Assault',
+        icon: {
+          url: '/fight_icon.png',
+          scaledSize: { width: 30, height: 30 } // Adjust size as needed
+        }
       },
       disturbance: {
-        url: '/disturbance_icon.png',
-        scaledSize: { width: 30, height: 30 } // Adjust size as needed
+        name: 'Disturbance',
+        icon: {
+          url: '/disturbance_icon.png',
+          scaledSize: { width: 30, height: 30 } // Adjust size as needed
+        }
       },
       propertyDamage: {
-        url: '/vandalism_icon.png',
-        scaledSize: { width: 30, height: 30 } // Adjust size as needed
+        name: 'Property Damage',
+        icon: {
+          url: '/vandalism_icon.png',
+          scaledSize: { width: 30, height: 30 } // Adjust size as needed
+        }
       },
     };
 
@@ -133,7 +174,7 @@ export default {
     };
 
     const selectMarker = (type) => {
-      selectedMarker.value = icons[type];
+      selectedMarker.value = incidenceTypes[type];
       showMarkerMenu.value = false;
 
       // Capture marker details
@@ -159,6 +200,10 @@ export default {
       }
     };
 
+    const toggleFilterMenu = () => {
+      showFilterMenu.value = !showFilterMenu.value;
+    };
+
     return {
       mapCenter,
       mapOptions,
@@ -171,8 +216,11 @@ export default {
       selectMarker,
       submitMarker,
       markers,
+      showFilterMenu,
+      toggleFilterMenu,
+      filterByTypes,
       onMounted,
-      icons,
+      incidenceTypes,
     };
   },
 };
@@ -214,7 +262,7 @@ export default {
 
 .plus-button {
   position: absolute;
-  bottom: 10%; /* Position 1/4 up from the bottom */
+  bottom: 60px;
   left: 50%; /* Center horizontally */
   transform: translateX(-50%); /* Adjust for the button's width */
   width: 70px; /* Increase width */
@@ -222,9 +270,10 @@ export default {
   display: flex;
   justify-content: center;
   align-items: center;
-  font-size: 40px; /* Increase font size for the plus icon */
+  font-size: 50px; /* Increase font size for the plus icon */
   background-color: #007bff;
   color: #fff;
+  padding-top: 0;
   border: none;
   border-radius: 50%; /* Ensure it's a circle */
   cursor: pointer;
@@ -249,5 +298,49 @@ export default {
   width: 30px; /* Adjust size as needed */
   height: 30px;
 }
-</style>
 
+.filter-button {
+  position: absolute;
+  bottom: 60px;
+  left: 80px;
+  transform: translateX(-50%); /* Adjust for the button's width */
+  width: 70px; /* Increase width */
+  height: 70px; /* Increase height */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 50px; /* Increase font size for the plus icon */
+  background-color: #007bff;
+  color: #fff;
+  padding-top: 0;
+  border: none;
+  border-radius: 50%; /* Ensure it's a circle */
+  cursor: pointer;
+  z-index: 1000;
+}
+
+.filter-button:hover {
+  background-color: #0056b3;
+}
+
+.filter-options {
+  position: absolute;
+  bottom: 150px; /* Adjust as needed to position above the button */
+  left: 40px;
+  background-color: #fff;
+  padding: 10px;
+  border-radius: 5px;
+  font-family: Arial, Helvetica, sans-serif;
+  z-index: 1000;
+}
+
+.filter-options label {
+  margin-left: 4px;
+}
+
+.filter-icon {
+  width: 20px; /* Adjust size as needed */
+  height: 20px;
+}
+
+</style>
