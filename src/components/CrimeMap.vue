@@ -25,45 +25,50 @@
       </template>
     </GMapMap>
 
-    <!-- Button to request user location -->
-    <button class="location-button" @click="getUserLocation">
-      <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-navigation">
-        <polygon points="3 11 22 2 13 21 11 13 3 11"></polygon>
-      </svg>
-    </button>
-
-    <!-- Plus button to choose marker -->
-    <button class="plus-button" @click="toggleMarkerMenu">
-      +
-    </button>
-
-    <!-- Marker selection buttons -->
-    <div v-if="showMarkerMenu" class="marker-buttons">
-      <button v-for="(incidenceType, type) in incidenceTypes" :key="type" @click="selectMarker(type)">
-        <img :src="incidenceType.icon.url" :alt="incidenceType.name" class="marker-icon" />
+    <div class="button-panel">
+      <!-- Button to request user location -->
+      <button class="location-button" @click="getUserLocation">
+        <svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-navigation">
+          <polygon points="3 11 22 2 13 21 11 13 3 11"></polygon>
+        </svg>
       </button>
-    </div>
 
-    <!-- Filter button -->
-    <button class="filter-button" @click="toggleFilterMenu">
-      ⚙
-    </button>
+      <div>
+        <!-- Plus button to choose marker -->
+        <button class="plus-button" @click="toggleMarkerMenu">
+          +
+        </button>
 
-    <!-- Filter options -->
-    <div v-if="showFilterMenu" class="filter-options">
-      <div v-for="(incidenceType, type) in incidenceTypes" :key="type">
-        <input type="checkbox"
-          :name="'enable_' + type"
-          :checked="filterByTypes[type]"
-          @change="event => filterByTypes[type] = event.target.checked"
-        >
-        <label :for="'enable_' + type">
-          <img :src="incidenceType.icon.url" :alt="incidenceType.name" class="filter-icon" />
-          {{incidenceType.name}}
-        </label>
+        <!-- Marker selection buttons -->
+        <div v-if="showMarkerMenu" class="marker-buttons">
+          <button v-for="(incidenceType, type) in incidenceTypes" :key="type" @click="selectMarker(type)">
+            <img :src="incidenceType.icon.url" :alt="incidenceType.name" class="marker-icon" />
+          </button>
+        </div>
+      </div>
+
+      <div>
+        <!-- Filter button -->
+        <button class="filter-button" @click="toggleFilterMenu">
+          <img src="/filter.png" alt="Filter" class="filter-icon" />
+        </button>
+
+        <!-- Filter options -->
+        <div v-if="showFilterMenu" class="filter-options">
+          <div v-for="(incidenceType, type) in incidenceTypes" :key="type">
+            <input type="checkbox"
+              :name="'enable_' + type"
+              :checked="filterByTypes[type]"
+              @change="event => filterByTypes[type] = event.target.checked"
+            >
+            <label :for="'enable_' + type">
+              <img :src="incidenceType.icon.url" :alt="incidenceType.name" class="filter-type-icon" />
+              {{incidenceType.name}}
+            </label>
+          </div>
+        </div>
       </div>
     </div>
-
   </div>
 </template>
 
@@ -171,6 +176,7 @@ export default {
 
     const toggleMarkerMenu = () => {
       showMarkerMenu.value = !showMarkerMenu.value;
+      showFilterMenu.value = false;
     };
 
     const selectMarker = (type) => {
@@ -202,6 +208,7 @@ export default {
 
     const toggleFilterMenu = () => {
       showFilterMenu.value = !showFilterMenu.value;
+      showMarkerMenu.value = false;
     };
 
     return {
@@ -238,11 +245,26 @@ export default {
   top: 0vh; /* Center the map by shifting it up */
 }
 
-.location-button {
+.button-panel {
   position: absolute;
   top: 50%; /* Position halfway down the screen */
   right: 20px; /* Position on the right side */
   transform: translateY(-50%); /* Center the button vertically */
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  justify-content: center;
+  align-items: center;
+  user-select: none;
+  z-index: 1000;
+}
+
+.button-panel > div {
+  position: relative
+}
+
+.location-button {
   width: 50px;
   height: 50px;
   display: flex;
@@ -251,9 +273,8 @@ export default {
   background-color: #007bff;
   color: #fff;
   border: none;
-  border-radius: 8px; /* Rounded edges */
+  border-radius: 20%; /* Rounded edges */
   cursor: pointer;
-  z-index: 1000;
 }
 
 .location-button:hover {
@@ -261,23 +282,18 @@ export default {
 }
 
 .plus-button {
-  position: absolute;
-  bottom: 60px;
-  left: 50%; /* Center horizontally */
-  transform: translateX(-50%); /* Adjust for the button's width */
-  width: 70px; /* Increase width */
-  height: 70px; /* Increase height */
+  width: 50px;
+  height: 50px;
   display: flex;
   justify-content: center;
   align-items: center;
-  font-size: 50px; /* Increase font size for the plus icon */
+  font-size: 50px;
   background-color: #007bff;
   color: #fff;
   padding-top: 0;
   border: none;
-  border-radius: 50%; /* Ensure it's a circle */
+  border-radius: 20%;
   cursor: pointer;
-  z-index: 1000;
 }
 
 .plus-button:hover {
@@ -286,12 +302,11 @@ export default {
 
 .marker-buttons {
   position: absolute;
-  bottom: 150px; /* Adjust as needed to position above the plus button */
-  left: 50%;
-  transform: translateX(-50%);
+  top: 30px;
+  right: 80px;
+  transform: translateY(-50%);
   display: flex;
   gap: 10px; /* Space between buttons */
-  z-index: 1000;
 }
 
 .marker-icon {
@@ -300,23 +315,18 @@ export default {
 }
 
 .filter-button {
-  position: absolute;
-  bottom: 60px;
-  left: 80px;
-  transform: translateX(-50%); /* Adjust for the button's width */
-  width: 70px; /* Increase width */
-  height: 70px; /* Increase height */
+  width: 50px;
+  height: 50px;
   display: flex;
   justify-content: center;
   align-items: center;
-  font-size: 50px; /* Increase font size for the plus icon */
+  font-size: 50px;
   background-color: #007bff;
   color: #fff;
-  padding-top: 0;
+  padding: 0;
   border: none;
-  border-radius: 50%; /* Ensure it's a circle */
+  border-radius: 20%;
   cursor: pointer;
-  z-index: 1000;
 }
 
 .filter-button:hover {
@@ -325,13 +335,15 @@ export default {
 
 .filter-options {
   position: absolute;
-  bottom: 150px; /* Adjust as needed to position above the button */
-  left: 40px;
+  top: 30px;
+  right: 80px;
+  transform: translateY(-50%);
   background-color: #fff;
+  box-shadow: 0 0 4px #0005;
   padding: 10px;
-  border-radius: 5px;
+  border-radius: 10px;
   font-family: Arial, Helvetica, sans-serif;
-  z-index: 1000;
+  white-space: nowrap;
 }
 
 .filter-options label {
@@ -339,6 +351,11 @@ export default {
 }
 
 .filter-icon {
+  width: 30px; /* Adjust size as needed */
+  height: 30px;
+}
+
+.filter-type-icon {
   width: 20px; /* Adjust size as needed */
   height: 20px;
 }

@@ -48,7 +48,7 @@ body {
 }
 
 .logo {
-  height: 50px;
+  height: 65px;
   width: auto;
   margin-left: 0.5rem;
 }
