@@ -28,9 +28,9 @@ const app = createApp(App)
 app.use(router)
 app.use(VueGoogleMaps, {
   load: {
-    key: 'AIzaSyCQHMZcwOioIC_iF95ITHO3Uhn79aiJ2mM',
-    libraries: 'places',
+    key: import.meta.env.VITE_GOOGLE_MAPS_API_KEY,
+    libraries: 'places,visualization',
+    v: 'weekly'
   },
 })
-
 app.mount('#app')
