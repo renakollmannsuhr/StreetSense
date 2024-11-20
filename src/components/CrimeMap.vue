@@ -4,7 +4,7 @@
   <div class="map-container">
     <GMapMap
       :center="mapCenter"
-      :zoom="16"
+      :zoom="14"
       :options="mapOptions"
       style="width: 100%; height: 100vh;"
     >
@@ -23,6 +23,12 @@
           :icon="incidenceTypes[marker.type].icon"
         />
       </template>
+
+      <GMapHeatmap 
+        v-if="heatmapReady && filteredHeatmapData.length > 0"
+        :data="filteredHeatmapData"
+        :options="heatmapOptions" 
+      />
     </GMapMap>
 
     <div class="button-panel">
@@ -55,7 +61,7 @@
 
         <!-- Filter options -->
         <div v-if="showFilterMenu" class="filter-options">
-          <div v-for="(incidenceType, type) in incidenceTypes" :key="type">
+          <div class="filter-icon-item" v-for="(incidenceType, type) in incidenceTypes" :key="type">
             <input type="checkbox"
               :name="'enable_' + type"
               :checked="filterByTypes[type]"
@@ -66,14 +72,46 @@
               {{incidenceType.name}}
             </label>
           </div>
+          <div class="filter-item">
+            <label>Heatmap Time Filter</label>
+            <select v-model="timeFilter">
+              <option value="all">All Time</option>
+              <option value="day">Past Day</option>
+              <option value="week">Past Week</option>
+              <option value="month">Past Month</option>
+              <option value="year">Past Year</option>
+            </select>
+          </div>
         </div>
       </div>
     </div>
+
+    <!-- Add user controls -->
+    <!-- <div class="heatmap-controls">
+      <label>Heatmap Time Filter</label>
+      <select v-model="timeFilter">
+        <option value="all">All Time</option>
+        <option value="week">Past Week</option>
+        <option value="month">Past Month</option>
+        <option value="year">Past Year</option>
+      </select> -->
+      
+      <!-- <div class="opacity-control">
+        <label>Heatmap Intensity</label>
+        <input 
+          type="range" 
+          v-model.number="heatmapOptions.opacity" 
+          min="0" 
+          max="1" 
+          step="0.1"
+        />
+      </div> -->
+    <!-- </div> -->
   </div>
 </template>
 
 <script>
-import { ref, onMounted } from 'vue';
+import { ref, onMounted, watch } from 'vue';
 import axios from 'axios';
 
 // Use relative paths when using proxy, or set base URL
@@ -96,6 +134,10 @@ export default {
       disturbance: true,
       propertyDamage: true
     });
+    const heatmapData = ref([]);
+    const heatmapReady = ref(false);
+    const timeFilter = ref('all');
+    const filteredHeatmapData = ref([]);
 
     const mapOptions = {
       disableDefaultUI: true,
@@ -108,15 +150,39 @@ export default {
       rotateControl: false,
     };
 
+
+    const heatmapOptions = {
+      radius: 85,
+      opacity: 0.5,
+      dissipating: true,
+      maxIntensity: 10,
+      // gradient: [
+      //   'rgba(0, 255, 255, 0)',
+      //   'rgba(0, 255, 255, 0.4)',
+      //   'rgba(0, 191, 255, 0.5)',
+      //   'rgba(0, 127, 255, 0.6)',
+      //   'rgba(255, 255, 0, 0.7)',
+      //   'rgba(255, 165, 0, 0.8)',
+      //   'rgba(255, 0, 0, 0.9)',
+      //   'rgba(139, 0, 0, 1)'
+      // ]
+    };
+
+
     onMounted(async () => {
       try {
         console.log('Fetching markers...');
         const response = await axios.get('/api/reports/');
         markers.value = response.data;
+        // Initialize filtered data
+        updateHeatmap();
+        
+        heatmapReady.value = true;
       } catch (error) {
-        console.error('Error fetching markers:', error);
+        console.error('Error:', error);
       }
     });
+
 
 
     const getUserLocation = () => {
@@ -206,6 +272,90 @@ export default {
       }
     };
 
+    const calculateWeight = (marker) => {
+      // Example weighting factors:
+      let weight = 1;
+      
+      // Time-based weighting (more recent = higher weight)
+      const daysSinceReport = (new Date() - new Date(marker.timestamp)) / (1000 * 60 * 60 * 24);
+      if (daysSinceReport < 7) weight *= 1.5;
+      if (daysSinceReport < 30) weight *= 1.2;
+      
+      // Severity-based weighting (if you have a severity field)
+      if (marker.severity === 'high') weight *= 1.5;
+      
+      return weight;
+    };
+
+    // Add data clustering for large datasets
+    const clusterData = (markers, radius = 100) => {
+      const clusters = {};
+      
+      markers.forEach(marker => {
+        const key = Math.floor(marker.latitude/radius) + ',' + 
+                    Math.floor(marker.longitude/radius);
+        
+        if (!clusters[key]) {
+          clusters[key] = {
+            lat: 0,
+            lng: 0,
+            count: 0,
+            weight: 0
+          };
+        }
+        
+        clusters[key].lat += marker.latitude;
+        clusters[key].lng += marker.longitude;
+        clusters[key].count++;
+        clusters[key].weight += calculateWeight(marker);
+      });
+      
+      return Object.values(clusters).map(cluster => ({
+        location: new google.maps.LatLng(
+          cluster.lat/cluster.count, 
+          cluster.lng/cluster.count
+        ),
+        weight: cluster.weight
+      }));
+    };
+
+    const updateHeatmap = () => {
+      // Filter data based on selected time period
+      const now = new Date();
+      const filtered = markers.value.filter(marker => {
+        const markerDate = new Date(marker.date_reported);
+        switch (timeFilter.value) {
+          case 'day':
+            return (now - markerDate) <= 24 * 60 * 60 * 1000;
+          case 'week':
+            return (now - markerDate) <= 7 * 24 * 60 * 60 * 1000;
+          case 'month':
+            return (now - markerDate) <= 30 * 24 * 60 * 60 * 1000;
+          case 'year':
+            return (now - markerDate) <= 365 * 24 * 60 * 60 * 1000;
+          default:
+            return true;
+        }
+      });
+
+
+      // Update heatmap data with filtered results
+      filteredHeatmapData.value = filtered.map(marker => ({
+        location: new google.maps.LatLng(marker.latitude, marker.longitude),
+        weight: 1,
+      }));
+    };
+
+    // Watch for changes in the time filter
+    watch(timeFilter, () => {
+      updateHeatmap();
+    });
+
+    // Watch for changes in the opacity slider
+    watch(() => heatmapOptions.opacity, (newOpacity) => {
+      console.log('Opacity changed:', newOpacity);
+    }, { deep: true });
+
     const toggleFilterMenu = () => {
       showFilterMenu.value = !showFilterMenu.value;
       showMarkerMenu.value = false;
@@ -228,6 +378,13 @@ export default {
       filterByTypes,
       onMounted,
       incidenceTypes,
+      heatmapData,
+      heatmapOptions,
+      heatmapReady,
+      calculateWeight,
+      clusterData,
+      timeFilter,
+      filteredHeatmapData,
     };
   },
 };
@@ -346,6 +503,19 @@ export default {
   white-space: nowrap;
 }
 
+.filter-item {
+  display: flex;
+  align-items: flex-start;
+  flex-direction:column;
+  margin-bottom: 0.5rem; /* Adds space below each item */
+}
+
+.filter-icon-item {
+  display: flex;
+  align-items: flex-start;
+  flex-direction:row;
+}
+
 .filter-options label {
   margin-left: 4px;
 }
@@ -360,4 +530,34 @@ export default {
   height: 20px;
 }
 
+
+.heatmap-controls {
+  position: absolute;
+  bottom: 20px;
+  left: 20px;
+  background: white;
+  padding: 10px;
+  border-radius: 4px;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+  z-index: 1000;
+}
+
+.opacity-control {
+  margin-top: 10px;
+}
+
+select, input[type="range"] {
+  width: 100%;
+  margin: 5px 0;
+}
+
+label {
+  display: block;
+  margin-bottom: 5px;
+  color: #333;
+}
+
+.filter-item {
+  margin-bottom: 10px;
+}
 </style>
