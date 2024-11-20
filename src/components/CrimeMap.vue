@@ -15,12 +15,12 @@
         :icon="userIcon"
       ></GMapMarker>
 
-      <!-- Add selected marker -->
+      <!-- Add a marker for each item in markers -->
       <template v-for="marker in markers" :key="marker.id">
         <GMapMarker
           v-if="filterByTypes[marker.type]"
           :position="{ lat: marker.latitude, lng: marker.longitude }"
-          :icon="incidenceTypes[marker.type].icon"
+          :icon="getMarkerIcon(marker.type, marker.date_reported)"
         />
       </template>
 
@@ -122,7 +122,6 @@ import axios from 'axios';
 //axios.defaults.baseURL = 'http://localhost:8000'; // dev mode
 axios.defaults.baseURL = 'https://streetsense-ae65da49a77f.herokuapp.com'; // production mode
 
-
 export default {
   name: 'CrimeMap',
   setup() {
@@ -170,9 +169,36 @@ export default {
     };
 
 
+    const calculateOpacityIcon = (baseIcon, dateReported) => {
+     
+      const elapsedHours = (Date.now() - new Date(dateReported).getTime()) / (1000 * 60 * 60);
+  
+      let newUrl = baseIcon;
+
+      if (elapsedHours <= 3.43) return `${newUrl}`;
+      if (elapsedHours <= 6.86) {
+        newUrl = baseIcon.replace('.png', '_0.15.png');
+      }
+      if (elapsedHours <= 10.29) {
+        newUrl = baseIcon.replace('.png', '_0.30.png');
+      }
+      if (elapsedHours <= 13.72) {
+        newUrl = baseIcon.replace('.png', '_0.5.png');
+      }
+      if (elapsedHours <= 17.15) {
+        newUrl = baseIcon.replace('.png', '_0.65.png');
+      };
+      if (elapsedHours <= 20.58) {
+        newUrl = baseIcon.replace('.png', '_0.8.png');
+      };
+      if (elapsedHours > 20.58) {
+        newUrl = baseIcon.replace('.png', '_0.9.png');
+      };
+      return newUrl;
+    };
+
     onMounted(async () => {
       try {
-        console.log('Fetching markers...');
         const response = await axios.get('/api/reports/');
         markers.value = response.data;
         // Initialize filtered data
@@ -183,6 +209,16 @@ export default {
         console.error('Error:', error);
       }
     });
+
+    const getMarkerIcon = (type, date) => {
+      const icon =  incidenceTypes[type].icon;
+      const urlToChange = icon.url;
+      const resultIcon = {
+        url: calculateOpacityIcon(urlToChange, date),
+        scaledSize: icon.scaledSize
+      }
+      return resultIcon;
+    };
 
 
 
@@ -221,7 +257,7 @@ export default {
       assault: {
         name: 'Assault',
         icon: {
-          url: '/fight_icon.png',
+          url: '/assault.png',
           scaledSize: { width: 30, height: 30 } // Adjust size as needed
         }
       },
@@ -418,6 +454,8 @@ export default {
       filteredHeatmapData,
       isWithinOneHour,
       oneHourFilterEnabled,
+      getMarkerIcon,
+      calculateOpacityIcon
     };
   },
 };
