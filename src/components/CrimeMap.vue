@@ -152,6 +152,13 @@ export default {
       keyboardShortcuts: false,
       scaleControl: false,
       rotateControl: false,
+      styles: [
+        {
+          featureType: "poi",
+          elementType: "all", 
+          stylers: [{ visibility: "off" }]
+        }
+      ]
     };
 
 
@@ -173,6 +180,7 @@ export default {
      
       const elapsedHours = (Date.now() - new Date(dateReported).getTime()) / (1000 * 60 * 60);
   
+
       let newUrl = baseIcon;
 
       if (elapsedHours <= 3.43) return `${newUrl}`;
@@ -191,8 +199,11 @@ export default {
       if (elapsedHours <= 20.58) {
         newUrl = baseIcon.replace('.png', '_0.8.png');
       };
-      if (elapsedHours > 20.58) {
-        newUrl = baseIcon.replace('.png', '_0.9.png');
+      if (elapsedHours > 20.58 && elapsedHours <= 24) {
+        newUrl = baseIcon.replace('.png', '_0.95.png');
+      };
+      if (elapsedHours > 24) {
+        newUrl = '';
       };
       return newUrl;
     };
@@ -250,7 +261,7 @@ export default {
       theft: {
         name: 'Theft',
         icon: {
-          url: '/theft_icon.png',
+          url: '/theft.png',
           scaledSize: { width: 30, height: 30 } // Adjust size as needed
         }
       },
@@ -264,15 +275,15 @@ export default {
       disturbance: {
         name: 'Disturbance',
         icon: {
-          url: '/disturbance_icon.png',
+          url: '/disturbance.png',
           scaledSize: { width: 30, height: 30 } // Adjust size as needed
         }
       },
       propertyDamage: {
         name: 'Property Damage',
         icon: {
-          url: '/vandalism_icon.png',
-          scaledSize: { width: 30, height: 30 } // Adjust size as needed
+          url: '/damage.png',
+          scaledSize: { width: 25, height: 25 } // Adjust size as needed
         }
       },
     };
