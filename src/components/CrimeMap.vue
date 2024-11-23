@@ -156,16 +156,12 @@ export default {
       opacity: 0.5,
       dissipating: true,
       maxIntensity: 10,
-      // gradient: [
-      //   'rgba(0, 255, 255, 0)',
-      //   'rgba(0, 255, 255, 0.4)',
-      //   'rgba(0, 191, 255, 0.5)',
-      //   'rgba(0, 127, 255, 0.6)',
-      //   'rgba(255, 255, 0, 0.7)',
-      //   'rgba(255, 165, 0, 0.8)',
-      //   'rgba(255, 0, 0, 0.9)',
-      //   'rgba(139, 0, 0, 1)'
-      // ]
+      gradient: [
+        'rgba(255, 255, 0, 0)',   // Transparent yellow
+        'rgba(255, 255, 0, 1)',   // Yellow
+        'rgba(255, 165, 0, 1)',   // Orange
+        'rgba(255, 0, 0, 1)'      // Red
+      ]
     };
 
 
@@ -507,13 +503,14 @@ export default {
   display: flex;
   align-items: flex-start;
   flex-direction:column;
-  margin-bottom: 0.5rem; /* Adds space below each item */
+  margin-top: 2rem; /* Adds space below each item */
 }
 
 .filter-icon-item {
   display: flex;
   align-items: flex-start;
   flex-direction:row;
+  /* margin-bottom: 0.5rem; */
 }
 
 .filter-options label {
