@@ -82,6 +82,10 @@
               <option value="year">Past Year</option>
             </select>
           </div>
+          <div class="filter-live">
+            <input type="checkbox" id="oneHourFilter" v-model="oneHourFilterEnabled">
+            <label for="oneHourFilter">Time of Day +/- 1 Hour</label>
+          </div>
         </div>
       </div>
     </div>
@@ -138,6 +142,7 @@ export default {
     const heatmapReady = ref(false);
     const timeFilter = ref('all');
     const filteredHeatmapData = ref([]);
+    const oneHourFilterEnabled = ref(false);
 
     const mapOptions = {
       disableDefaultUI: true,
@@ -316,24 +321,36 @@ export default {
     };
 
     const updateHeatmap = () => {
-      // Filter data based on selected time period
       const now = new Date();
+
       const filtered = markers.value.filter(marker => {
         const markerDate = new Date(marker.date_reported);
+
+        // Check if the marker falls within the selected time filter
+        let isWithinTimeFilter = false;
         switch (timeFilter.value) {
           case 'day':
-            return (now - markerDate) <= 24 * 60 * 60 * 1000;
+            isWithinTimeFilter = (now - markerDate) <= 24 * 60 * 60 * 1000;
+            break;
           case 'week':
-            return (now - markerDate) <= 7 * 24 * 60 * 60 * 1000;
+            isWithinTimeFilter = (now - markerDate) <= 7 * 24 * 60 * 60 * 1000;
+            break;
           case 'month':
-            return (now - markerDate) <= 30 * 24 * 60 * 60 * 1000;
+            isWithinTimeFilter = (now - markerDate) <= 30 * 24 * 60 * 60 * 1000;
+            break;
           case 'year':
-            return (now - markerDate) <= 365 * 24 * 60 * 60 * 1000;
+            isWithinTimeFilter = (now - markerDate) <= 365 * 24 * 60 * 60 * 1000;
+            break;
           default:
-            return true;
+            isWithinTimeFilter = true;
         }
-      });
 
+        // Apply the +/- one hour filter if enabled
+        const isWithinOneHourFilter = oneHourFilterEnabled.value ? isWithinOneHour(markerDate) : true;
+
+        // Return true if the marker is within both the time filter and the one hour filter
+        return isWithinTimeFilter && isWithinOneHourFilter;
+      });
 
       // Update heatmap data with filtered results
       filteredHeatmapData.value = filtered.map(marker => ({
@@ -356,6 +373,24 @@ export default {
       showFilterMenu.value = !showFilterMenu.value;
       showMarkerMenu.value = false;
     };
+
+    const isWithinOneHour = (markerDate) => {
+      const now = new Date();
+      const currentHour = now.getHours();
+      const currentMinutes = now.getMinutes();
+      const markerHour = markerDate.getHours();
+      const markerMinutes = markerDate.getMinutes();
+
+      // Calculate the time difference in minutes
+      const timeDifference = Math.abs((currentHour * 60 + currentMinutes) - (markerHour * 60 + markerMinutes));
+
+      // Check if the time difference is within 60 minutes (1 hour)
+      return timeDifference <= 60;
+    };
+
+    watch(oneHourFilterEnabled, () => {
+      updateHeatmap();
+    });
 
     return {
       mapCenter,
@@ -381,6 +416,8 @@ export default {
       clusterData,
       timeFilter,
       filteredHeatmapData,
+      isWithinOneHour,
+      oneHourFilterEnabled,
     };
   },
 };
@@ -511,6 +548,12 @@ export default {
   align-items: flex-start;
   flex-direction:row;
   /* margin-bottom: 0.5rem; */
+}
+
+.filter-live {
+  display: flex;
+  align-items: flex-start;
+  flex-direction:row;
 }
 
 .filter-options label {
