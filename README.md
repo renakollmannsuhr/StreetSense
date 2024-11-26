@@ -76,3 +76,13 @@ This application assumes you have the following installed:
                         http://www.apache.org/licenses/
     
 Please see [License Text document](LICENSE) for more details
+
+# Disclaimer for use of GenAI
+
+This project makes use of ChatGPT for app feature ideation, persona creations, marketing advice, and branding.
+
+# Icon Image Credits
+<a href="https://www.flaticon.com/free-icons/swearing" title="swearing icons">Swearing icons created by Kajo - Flaticon</a>
+<a href="" title="fist icons">Fist icons created by Smashicons - Flaticon</a>
+<a href="" title="alert icons">Alert icons created by Freepik - Flaticon</a>
+<a href="" title="padlock icons">Padlock icons created by Freepik - Flaticon</a>
