@@ -489,7 +489,6 @@ export default {
   top: 50%; /* Position halfway down the screen */
   right: 20px; /* Position on the right side */
   transform: translateY(-50%); /* Center the button vertically */
-  padding: 20px;
   display: flex;
   flex-direction: column;
   gap: 10px;
@@ -551,6 +550,21 @@ export default {
 .marker-icon {
   width: 30px; /* Adjust size as needed */
   height: 30px;
+}
+
+.plus-button {
+  width: 50px;
+  height: 50px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 50px;
+  background-color: #007bff;
+  color: #fff;
+  padding: 0;
+  border: none;
+  border-radius: 20%;
+  cursor: pointer;
 }
 
 .filter-button {
