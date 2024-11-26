@@ -587,9 +587,8 @@ export default {
 
 .filter-options {
   position: absolute;
-  top: 30px;
-  right: 80px;
-  transform: translateY(-50%);
+  bottom: 60px;
+  transform: translateX(-50%);
   background-color: #fff;
   box-shadow: 0 0 4px #0005;
   padding: 10px;
