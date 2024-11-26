@@ -280,7 +280,7 @@ export default {
         }
       },
       propertyDamage: {
-        name: 'Property Damage',
+        name: 'Damage',
         icon: {
           url: '/damage.png',
           scaledSize: { width: 25, height: 25 } // Adjust size as needed
