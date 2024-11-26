@@ -32,12 +32,6 @@
     </GMapMap>
 
     <div class="button-panel">
-      <!-- Button to request user location -->
-      <button class="location-button" @click="getUserLocation">
-        <svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-navigation">
-          <polygon points="3 11 22 2 13 21 11 13 3 11"></polygon>
-        </svg>
-      </button>
 
       <div>
         <!-- Plus button to choose marker -->
@@ -214,6 +208,8 @@ export default {
         markers.value = response.data;
         // Initialize filtered data
         updateHeatmap();
+      
+        getUserLocation();
         
         heatmapReady.value = true;
       } catch (error) {
@@ -501,23 +497,6 @@ export default {
 
 .button-panel > div {
   position: relative
-}
-
-.location-button {
-  width: 50px;
-  height: 50px;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  background-color: #007bff;
-  color: #fff;
-  border: none;
-  border-radius: 20%; /* Rounded edges */
-  cursor: pointer;
-}
-
-.location-button:hover {
-  background-color: #0056b3;
 }
 
 .plus-button {
