@@ -482,15 +482,14 @@ export default {
 
 .button-panel {
   position: absolute;
-  top: 50%; /* Position halfway down the screen */
-  right: 20px; /* Position on the right side */
-  transform: translateY(-50%); /* Center the button vertically */
+  bottom: 20px;
+  left: 0;
+  right: 0;
   display: flex;
-  flex-direction: column;
-  gap: 10px;
   justify-content: center;
+  gap: 10px;
   align-items: center;
-  user-select: none;
+  padding: 10px;
   z-index: 1000;
 }
 
@@ -519,9 +518,9 @@ export default {
 
 .marker-buttons {
   position: absolute;
-  top: 30px;
-  right: 80px;
-  transform: translateY(-50%);
+  bottom: 60px;
+  left: 50%;
+  transform: translateX(-50%);
   display: flex;
   gap: 10px; /* Space between buttons */
 }
@@ -567,9 +566,8 @@ export default {
 
 .filter-options {
   position: absolute;
-  top: 30px;
-  right: 80px;
-  transform: translateY(-50%);
+  bottom: 60px;
+  transform: translateX(-50%);
   background-color: #fff;
   box-shadow: 0 0 4px #0005;
   padding: 10px;
@@ -641,5 +639,12 @@ label {
 
 .filter-item {
   margin-bottom: 10px;
+}
+
+/* Media query for mobile devices */
+@media (max-width: 768px) {
+    .button-panel {
+        bottom: 100px; /* Raise it higher for smaller screens */
+    }
 }
 </style>
