@@ -105,12 +105,18 @@
         />
       </div> -->
     <!-- </div> -->
+    <div>
+      <ModalsContainer />
+    </div>
   </div>
 </template>
 
 <script>
 import { ref, onMounted, watch } from 'vue';
 import axios from 'axios';
+import 'vue-final-modal/style.css';
+import { ModalsContainer, useModal } from 'vue-final-modal';
+import ModalConfirmPlainCss from './ModalConfirmPlainCss.vue';
 
 // Use relative paths when using proxy, or set base URL
 //axios.defaults.baseURL = 'http://localhost:8000'; // dev mode
@@ -118,6 +124,9 @@ axios.defaults.baseURL = 'https://streetsense-ae65da49a77f.herokuapp.com'; // pr
 
 export default {
   name: 'CrimeMap',
+  components: {
+    ModalsContainer,
+  },
   setup() {
     const mapCenter = ref({ lat: 48.4359, lng: -123.35155 });
     const userLocation = ref(null);
@@ -309,12 +318,25 @@ export default {
     const submitMarker = async (markerDetails) => {
       try {
         const response = await axios.post('/api/reports/', markerDetails);
-        markers.value.push(response.data); // Add the new marker to the list
-        alert('Marker saved successfully!');
+        markers.value.push(response.data); 
+        open();
       } catch (error) {
         console.error('Error saving marker:', error);
       }
     };
+
+    const { open, close } = useModal({
+      component: ModalConfirmPlainCss,
+      attrs: {
+        title: 'Thank you for your report!',
+        onConfirm() {
+          close()
+        },
+      },
+      slots: {
+        default: '<p>We highly recommend our users to report to the Victoria Police Department. Visit VicPD (link here) for serious incidents. </p>',
+      },
+    });
 
     const calculateWeight = (marker) => {
       // Example weighting factors:
@@ -462,7 +484,9 @@ export default {
       isWithinOneHour,
       oneHourFilterEnabled,
       getMarkerIcon,
-      calculateOpacityIcon
+      calculateOpacityIcon,
+      open,
+      close
     };
   },
 };
