@@ -1,5 +1,6 @@
 import { createApp } from 'vue'
 import { createRouter, createWebHistory } from 'vue-router'
+import { createVfm } from 'vue-final-modal'
 import App from './App.vue'
 import Product from './components/Product.vue'
 import StreetSense from './components/StreetSense.vue'
@@ -24,6 +25,7 @@ const router = createRouter({
 })
 
 const app = createApp(App)
+const vfm = createVfm()
 
 app.use(router)
 app.use(VueGoogleMaps, {
@@ -33,4 +35,5 @@ app.use(VueGoogleMaps, {
     v: 'weekly'
   },
 })
+app.use(vfm)
 app.mount('#app')
