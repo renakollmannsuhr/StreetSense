@@ -173,31 +173,6 @@
         </div>
       </div>
     </div>
-<<<<<<< HEAD
-=======
-
-    <!-- Add user controls -->
-    <!-- <div class="heatmap-controls">
-      <label>Heatmap Time Filter</label>
-      <select v-model="timeFilter">
-        <option value="all">All Time</option>
-        <option value="week">Past Week</option>
-        <option value="month">Past Month</option>
-        <option value="year">Past Year</option>
-      </select> -->
-      
-      <!-- <div class="opacity-control">
-        <label>Heatmap Intensity</label>
-        <input 
-          type="range" 
-          v-model.number="heatmapOptions.opacity" 
-          min="0" 
-          max="1" 
-          step="0.1"
-        />
-      </div> -->
-    <!-- </div> -->
->>>>>>> 7a6f2cef44709d5f17fc9fa0a2eaf68094e12e26
     <div>
       <ModalsContainer />
     </div>
@@ -328,8 +303,6 @@ export default {
       return resultIcon;
     };
 
-<<<<<<< HEAD
-=======
     const openInfoWindow = (marker) =>{
       openMarker.value = marker;
     }
@@ -350,7 +323,6 @@ export default {
       }).format(date);
     };
 
->>>>>>> 7a6f2cef44709d5f17fc9fa0a2eaf68094e12e26
     const getUserLocation = () => {
       if (navigator.geolocation) {
         navigator.geolocation.getCurrentPosition(
@@ -644,19 +616,14 @@ export default {
       oneHourFilterEnabled,
       getMarkerIcon,
       calculateOpacityIcon,
-<<<<<<< HEAD
       open,
       close,
       toggleInfoMenu,
       showInfoMenu,
-=======
       openInfoWindow,
       formatDate,
-      open,
-      close,
       handleVote,
       yesVotes
->>>>>>> 7a6f2cef44709d5f17fc9fa0a2eaf68094e12e26
     };
   },
 };
