@@ -57,6 +57,70 @@
     </GMapMap>
 
     <div class="button-panel">
+      <div>
+        
+        <button class="info-button" @click="toggleInfoMenu">
+          i
+        </button>
+
+        <!-- Info Menu -->
+        <div v-if="showInfoMenu" class="info-menu">
+          <div class="title-row">
+            <h3>About StreetSense</h3>
+            <a href="https://williamdw6.wixsite.com/streetsense" target="_blank" class="website-link">Product Page</a>
+          </div>
+          <p>StreetSense helps you stay informed about incidents in your area:</p>
+          <ul>
+            <li>View recent incidents on the map</li>
+            <li>Report incidents using the + button</li>
+            <li>Filter incident types using the filter button</li>
+            <li>Marker opacity indicates incident recency</li>
+            <li>Heatmap shows historical incidents</li>
+            <li>Click on a marker to see more details</li>
+          </ul>
+          
+          <div class="legend">
+            <h4>Incident Types:</h4>
+            <div class="legend-container">
+              <div class="legend-item">
+                <img src="/theft.png" alt="Theft" class="legend-icon" />
+                <div class="legend-text">
+                  <span class="legend-title">Theft</span>
+                  <span class="legend-description"> - Stolen property or belongings</span>
+                </div>
+              </div>
+              <div class="legend-item">
+                <img src="/assault.png" alt="Assault" class="legend-icon" />
+                <div class="legend-text">
+                  <span class="legend-title">Threats</span>
+                  <span class="legend-description"> - Physical or verbal threats</span>
+                </div>
+              </div>
+              <div class="legend-item">
+                <img src="/disturbance.png" alt="Disturbance" class="legend-icon" />
+                <div class="legend-text">
+                  <span class="legend-title">Disturbance</span>
+                  <span class="legend-description"> - Public disorder or noise</span>
+                </div>
+              </div>
+              <div class="legend-item">
+                <img src="/damage.png" alt="Damage" class="legend-icon" />
+                <div class="legend-text">
+                  <span class="legend-title">Damage</span>
+                  <span class="legend-description"> - Vandalism or property damage</span>
+                </div>
+              </div>
+            </div>
+            
+            <div class="donate-container">
+              <a href="https://williamdw6.wixsite.com/streetsense#comp-m3rnsn51" target="_blank" class="donate-button">
+                Support This Project
+              </a>
+            </div>
+          </div>
+        </div>
+
+      </div>
 
       <div>
         <!-- Plus button to choose marker -->
@@ -94,6 +158,7 @@
           <div class="filter-item">
             <label>Heatmap Time Filter</label>
             <select v-model="timeFilter">
+              <option value="off">Heatmap Off</option>
               <option value="all">All Time</option>
               <option value="day">Past Day</option>
               <option value="week">Past Week</option>
@@ -108,28 +173,6 @@
         </div>
       </div>
     </div>
-
-    <!-- Add user controls -->
-    <!-- <div class="heatmap-controls">
-      <label>Heatmap Time Filter</label>
-      <select v-model="timeFilter">
-        <option value="all">All Time</option>
-        <option value="week">Past Week</option>
-        <option value="month">Past Month</option>
-        <option value="year">Past Year</option>
-      </select> -->
-      
-      <!-- <div class="opacity-control">
-        <label>Heatmap Intensity</label>
-        <input 
-          type="range" 
-          v-model.number="heatmapOptions.opacity" 
-          min="0" 
-          max="1" 
-          step="0.1"
-        />
-      </div> -->
-    <!-- </div> -->
     <div>
       <ModalsContainer />
     </div>
@@ -172,6 +215,7 @@ export default {
     const timeFilter = ref('all');
     const filteredHeatmapData = ref([]);
     const oneHourFilterEnabled = ref(false);
+    const showInfoMenu = ref(false);
 
     const mapOptions = {
       disableDefaultUI: true,
@@ -337,6 +381,7 @@ export default {
     const toggleMarkerMenu = () => {
       showMarkerMenu.value = !showMarkerMenu.value;
       showFilterMenu.value = false;
+      showInfoMenu.value = false;
     };
 
     const selectMarker = (type) => {
@@ -458,6 +503,12 @@ export default {
     };
 
     const updateHeatmap = () => {
+      // If timeFilter is "off", set empty array and return
+      if (timeFilter.value === 'off') {
+        filteredHeatmapData.value = [];
+        return;
+      }
+
       const now = new Date();
 
       const filtered = markers.value.filter(marker => {
@@ -509,6 +560,7 @@ export default {
     const toggleFilterMenu = () => {
       showFilterMenu.value = !showFilterMenu.value;
       showMarkerMenu.value = false;
+      showInfoMenu.value = false;
     };
 
     const isWithinOneHour = (markerDate) => {
@@ -528,6 +580,12 @@ export default {
     watch(oneHourFilterEnabled, () => {
       updateHeatmap();
     });
+
+    const toggleInfoMenu = () => {
+      showInfoMenu.value = !showInfoMenu.value;
+      showFilterMenu.value = false;
+      showMarkerMenu.value = false;
+    };
 
     return {
       mapCenter,
@@ -558,10 +616,12 @@ export default {
       oneHourFilterEnabled,
       getMarkerIcon,
       calculateOpacityIcon,
-      openInfoWindow,
-      formatDate,
       open,
       close,
+      toggleInfoMenu,
+      showInfoMenu,
+      openInfoWindow,
+      formatDate,
       handleVote,
       yesVotes
     };
@@ -783,5 +843,153 @@ label {
     .button-panel {
         bottom: 100px; /* Raise it higher for smaller screens */
     }
+}
+
+
+
+
+
+
+.info-button {
+  width: 50px;
+  height: 50px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 34px;
+  background-color: #007bff;
+  color: #fff;
+  padding: 0;
+  border: none;
+  border-radius: 20%;
+  cursor: pointer;
+  font-style: italic;
+  font-family: "Times New Roman", serif;
+}
+
+.info-button:hover {
+  background-color: #0056b3;
+}
+
+.info-menu {
+  position: absolute;
+  bottom: 60px;
+  left: 75%;
+  transform: translateX(-50%);
+  background-color: #fff;
+  box-shadow: 0 0 4px rgba(0, 0, 0, 0.3);
+  padding: 20px;
+  border-radius: 10px;
+  font-family: Arial, sans-serif;
+  width: 80vw;
+  max-width: 600px;
+  z-index: 1000;
+  margin: 0 auto;
+  box-sizing: border-box;
+}
+
+.info-menu h3 {
+  margin-top: 0;
+  color: #333;
+}
+
+.info-menu ul {
+  padding-left: 20px;
+  margin: 10px 0;
+}
+
+.legend {
+  margin-top: 15px;
+  border-top: 1px solid #eee;
+  padding-top: 10px;
+}
+
+.legend h4 {
+  margin: 0 0 10px 0;
+  color: #333;
+}
+
+.legend-item {
+  display: flex;
+  align-items: center;
+  margin: 5px 0;
+}
+
+.legend-icon {
+  width: 20px;
+  height: 20px;
+  margin-right: 10px;
+}
+
+.support-links {
+  margin-top: 20px;
+  border-top: 1px solid #eee;
+  padding-top: 15px;
+}
+
+.links-container {
+  display: flex;
+  justify-content: center;
+  gap: 20px;
+  margin-top: 10px;
+}
+
+.support-link {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 16px;
+  background-color: #007bff;
+  color: white;
+  text-decoration: none;
+  border-radius: 5px;
+  font-size: 0.9em;
+  transition: background-color 0.2s;
+}
+
+.support-link:hover {
+  background-color: #0056b3;
+}
+
+.support-link i {
+  font-size: 1.1em;
+}
+
+.title-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 15px;
+}
+
+.website-link {
+  color: #007bff;
+  text-decoration: none;
+  font-size: 1.3em;
+}
+
+.website-link:hover {
+  text-decoration: underline;
+}
+
+.donate-container {
+  display: flex;
+  justify-content: center;
+  margin-top: 20px;
+  padding-top: 15px;
+  border-top: 1px solid #eee;
+}
+
+.donate-button {
+  padding: 10px 20px;
+  background-color: #007bff;
+  color: white;
+  text-decoration: none;
+  border-radius: 5px;
+  transition: background-color 0.2s;
+}
+
+.donate-button:hover {
+  background-color: #0056b3;
 }
 </style>

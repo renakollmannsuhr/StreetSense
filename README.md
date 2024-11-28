@@ -14,7 +14,7 @@ This project is a collborative task between Nikolas Johnson (CSC), Callum Rush (
 
 # Product Page
 
-Our current product page draft is available at www.streetsense.live/product
+Our current product page draft is available at [www.streetsense.live/product](https://williamdw6.wixsite.com/streetsense)
 
 This page is still a work in progress.
 As our app's main feature is a map view, we modeled it after other apps like [Open Street Maps](https://www.openstreetmap.org/about) where the user initially lands on the map view of the app and then can click an 'About' link to access the product page. We are still working on implmenting this 'About' link on our map landing page.
@@ -79,7 +79,7 @@ Please see [License Text document](LICENSE) for more details
 
 # Disclaimer for use of GenAI
 
-This project makes use of ChatGPT for app feature ideation, persona creations, marketing advice, and branding.
+This project makes use of ChatGPT for app feature ideation, code, persona creations, marketing advice, and branding.
 
 # Icon Image Credits
 <a href="https://www.flaticon.com/free-icons/swearing" title="swearing icons">Swearing icons created by Kajo - Flaticon</a>
