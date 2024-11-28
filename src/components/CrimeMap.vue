@@ -124,12 +124,18 @@
         />
       </div> -->
     <!-- </div> -->
+    <div>
+      <ModalsContainer />
+    </div>
   </div>
 </template>
 
 <script>
 import { ref, onMounted, watch } from 'vue';
 import axios from 'axios';
+import 'vue-final-modal/style.css';
+import { ModalsContainer, useModal } from 'vue-final-modal';
+import ModalConfirmPlainCss from './ModalConfirmPlainCss.vue';
 
 // Use relative paths when using proxy, or set base URL
 //axios.defaults.baseURL = 'http://localhost:8000'; // dev mode
@@ -137,6 +143,9 @@ axios.defaults.baseURL = 'https://streetsense-ae65da49a77f.herokuapp.com'; // pr
 
 export default {
   name: 'CrimeMap',
+  components: {
+    ModalsContainer,
+  },
   setup() {
     const mapCenter = ref({ lat: 48.4359, lng: -123.35155 });
     const userLocation = ref(null);
@@ -339,12 +348,56 @@ export default {
     const submitMarker = async (markerDetails) => {
       try {
         const response = await axios.post('/api/reports/', markerDetails);
-        markers.value.push(response.data); // Add the new marker to the list
-        alert('Marker saved successfully!');
+        markers.value.push(response.data); 
+        open();
       } catch (error) {
         console.error('Error saving marker:', error);
       }
     };
+
+    const { open, close } = useModal({
+      component: ModalConfirmPlainCss,
+      attrs: {
+        title: 'Your Report Has Been Saved!',
+        onConfirm() {
+          close()
+        },
+      },
+      slots: {
+    default: `
+      <div>
+        <!-- Thank You Note -->
+        <p style="font-size: 20px;">Thank you for your report! Your contribution helps make our community a safer and better place for everyone.</p>
+        
+        <!-- Transportation Ad -->
+        <div style="padding: 20px; background-color: #53B0B2; border: 1px solid #ddd; margin-top: 20px;">
+          <div style="display: flex; align-items: center;">
+            <img src="../../public/car.png" alt="Safe Ride Icon" style="width: 50px; margin-right: 15px;">
+            <div>
+              <p style="margin: 0; font-size: 16px; font-weight: bold; color: rgba(255, 255, 255, 0.87);">Get Home Safely!</p>
+              <p style="margin: 0; font-size: 14px; color: rgba(255, 255, 255, 0.87);">Consider using a rideshare service for a safer journey home.</p>
+            </div>
+          </div>
+        </div>
+        <!-- Separator -->
+        <div style="margin: 15px 0; border-top: 1px solid #ddd;"></div>
+        
+        <!-- VicPD Information -->
+        <div style="background-color: #14243f; padding: 15px; border: 1px solid #ddd; border-radius: 5px;">
+          <p style="color: rgba(255, 255, 255, 0.87);"><strong>Victoria Police Department</strong></p>
+          <p style="color: rgba(255, 255, 255, 0.87);">For serious incidents, we encourage you to contact the <a href="https://vicpd.ca/" target="_blank" style="color: #007BFF; text-decoration: underline;">Victoria Police Department</a> directly.</p>
+          <iframe 
+            src="https://vicpd.ca/services/" 
+            width="100%" 
+            height="200px" 
+            style="border: 1px solid #ccc; border-radius: 4px;"
+          ></iframe>
+          <p style="margin-top: 10px; font-weight: bold; color: rgba(255, 255, 255, 0.87);">For emergencies, please call 911.</p>
+        </div>
+      </div>
+    `,
+  },
+    });
 
     const calculateWeight = (marker) => {
       // Example weighting factors:
@@ -495,7 +548,9 @@ export default {
       getMarkerIcon,
       calculateOpacityIcon,
       openInfoWindow,
-      formatDate
+      formatDate,
+      open,
+      close
     };
   },
 };
