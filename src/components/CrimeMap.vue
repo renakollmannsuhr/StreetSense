@@ -456,7 +456,7 @@ export default {
         <!-- Transportation Ad -->
         <div style="padding: 20px; background-color: #53B0B2; border: 1px solid #ddd; margin-top: 20px;">
           <div style="display: flex; align-items: center;">
-            <img src="../../public/car.png" alt="Safe Ride Icon" style="width: 50px; margin-right: 15px;">
+            <img src="/car.png" alt="Safe Ride Icon" style="width: 50px; margin-right: 15px;">
             <div>
               <p style="margin: 0; font-size: 16px; font-weight: bold; color: rgba(255, 255, 255, 0.87);">Get Home Safely!</p>
               <p style="margin: 0; font-size: 14px; color: rgba(255, 255, 255, 0.87);">Consider using a rideshare service for a safer journey home.</p>
