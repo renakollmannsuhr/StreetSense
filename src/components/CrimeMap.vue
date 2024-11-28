@@ -93,7 +93,7 @@
                 <img src="/assault.png" alt="Assault" class="legend-icon" />
                 <div class="legend-text">
                   <span class="legend-title">Threats</span>
-                  <span class="legend-description"> - Physical or verbal threats</span>
+                  <span class="legend-description"> - Physical or verbal threats and altercations</span>
                 </div>
               </div>
               <div class="legend-item">
@@ -205,10 +205,10 @@ export default {
     let yesVotes = ref(0);
     const showFilterMenu = ref(false);
     const filterByTypes = ref({
-      theft: true,
-      assault: true,
-      disturbance: true,
-      propertyDamage: true
+      Theft: true,
+      Threat: true,
+      Disturbance: true,
+      Damage: true
     });
     const heatmapData = ref([]);
     const heatmapReady = ref(false);
@@ -348,28 +348,28 @@ export default {
     };
 
     const incidenceTypes = {
-      theft: {
+      Theft: {
         name: 'Theft',
         icon: {
           url: '/theft.png',
           scaledSize: { width: 30, height: 30 } // Adjust size as needed
         }
       },
-      assault: {
-        name: 'Assault',
+      Threat: {
+        name: 'Threat',
         icon: {
           url: '/assault.png',
           scaledSize: { width: 30, height: 30 } // Adjust size as needed
         }
       },
-      disturbance: {
+      Disturbance: {
         name: 'Disturbance',
         icon: {
           url: '/disturbance.png',
           scaledSize: { width: 30, height: 30 } // Adjust size as needed
         }
       },
-      propertyDamage: {
+      Damage: {
         name: 'Damage',
         icon: {
           url: '/damage.png',
