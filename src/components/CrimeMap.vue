@@ -20,8 +20,27 @@
         <GMapMarker
           v-if="filterByTypes[marker.type]"
           :position="{ lat: marker.latitude, lng: marker.longitude }"
+          :clickable="true"
           :icon="getMarkerIcon(marker.type, marker.date_reported)"
-        />
+          @click="openInfoWindow(marker.id)"
+        >
+          <GMapInfoWindow 
+          @closeclick="openMarker === null"
+          :opened="openMarker === marker.id"
+          :options=" {
+              pixelOffset: {
+                width: 10, height: 0
+              },
+              maxWidth: 200,
+              maxHeight: 320,
+          }"
+          >
+            <div class="info-window">
+              <p class="info-title"><strong>{{ marker.type }}</strong> reported here</p>
+              <p class="info-date">on {{ formatDate(marker.date_reported) }}</p>
+            </div>
+          </GMapInfoWindow>
+        </GMapMarker>
       </template>
 
       <GMapHeatmap 
@@ -122,6 +141,7 @@ export default {
     const mapCenter = ref({ lat: 48.4359, lng: -123.35155 });
     const userLocation = ref(null);
     const selectedMarker = ref(null);
+    const openMarker = ref(null);
     const showMarkerMenu = ref(false);
     const markers = ref([]);
     const showFilterMenu = ref(false);
@@ -155,7 +175,6 @@ export default {
       ]
     };
 
-
     const heatmapOptions = {
       radius: 85,
       opacity: 0.5,
@@ -169,12 +188,9 @@ export default {
       ]
     };
 
-
     const calculateOpacityIcon = (baseIcon, dateReported) => {
      
       const elapsedHours = (Date.now() - new Date(dateReported).getTime()) / (1000 * 60 * 60);
-  
-
       let newUrl = baseIcon;
 
       if (elapsedHours <= 3.43) return `${newUrl}`;
@@ -227,7 +243,21 @@ export default {
       return resultIcon;
     };
 
+    const openInfoWindow = (marker) =>{
+      openMarker.value = marker;
+    }
 
+    const formatDate = (dateString) => {
+      if (!dateString) return 'Unknown date'; // Handle null or undefined dates
+      const date = new Date(dateString); // Use `new` to create a valid Date object
+      return new Intl.DateTimeFormat('en-US', {
+        month: 'long',
+        day: 'numeric',
+        year: 'numeric',
+        hour: 'numeric',
+        minute: 'numeric',
+      }).format(date);
+    };
 
     const getUserLocation = () => {
       if (navigator.geolocation) {
@@ -442,6 +472,7 @@ export default {
       userIcon,
       getUserLocation,
       selectedMarker,
+      openMarker,
       showMarkerMenu,
       toggleMarkerMenu,
       selectMarker,
@@ -462,7 +493,9 @@ export default {
       isWithinOneHour,
       oneHourFilterEnabled,
       getMarkerIcon,
-      calculateOpacityIcon
+      calculateOpacityIcon,
+      openInfoWindow,
+      formatDate
     };
   },
 };
@@ -639,6 +672,23 @@ label {
 
 .filter-item {
   margin-bottom: 10px;
+}
+
+.info-window {
+  text-align: center;
+  font-size: 16px;
+  font-family: Arial, sans-serif;
+}
+
+.info-title {
+  font-size: 186x;
+  margin-bottom: 5px;
+}
+
+.info-date {
+  color: rgb(56, 56, 62);
+  font-size: 20px;
+  margin-bottom: 20px;
 }
 
 /* Media query for mobile devices */
