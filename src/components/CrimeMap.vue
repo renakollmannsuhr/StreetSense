@@ -18,7 +18,7 @@
       <!-- Add a marker for each item in markers -->
       <template v-for="marker in markers" :key="marker.id">
         <GMapMarker
-          v-if="filterByTypes[marker.type]"
+          v-if="filterByTypes[marker.type] && isMarkerWithinTimeFilter(marker.date_reported)"
           :position="{ lat: marker.latitude, lng: marker.longitude }"
           :clickable="true"
           :icon="getMarkerIcon(marker.type, marker.date_reported)"
@@ -155,6 +155,27 @@
               {{incidenceType.name}}
             </label>
           </div>
+
+
+
+          <div class="filter-item">
+            <label>Incident Time Range</label>
+            <select v-model="markerTimeFilter">
+              <option value="day">Past Day</option>
+              <option value="week">Past Week</option>
+              <option value="month">Past Month</option>
+              <option value="year">Past Year</option>
+              <option value="all">All Time</option>
+            </select>
+          </div>
+          <!-- <div class="filter-item">
+            <label>Marker Fade Effect</label>
+            <select v-model="markerFadeEnabled">
+              <option value="on">Enabled</option>
+              <option value="off">Disabled</option>
+            </select>
+          </div> -->
+
           <div class="filter-item">
             <label>Heatmap Time Filter</label>
             <select v-model="timeFilter">
@@ -170,6 +191,7 @@
             <input type="checkbox" id="oneHourFilter" v-model="oneHourFilterEnabled">
             <label for="oneHourFilter">Time of Day +/- 1 Hour</label>
           </div>
+          
         </div>
       </div>
     </div>
@@ -216,6 +238,8 @@ export default {
     const filteredHeatmapData = ref([]);
     const oneHourFilterEnabled = ref(false);
     const showInfoMenu = ref(false);
+    const markerTimeFilter = ref('day');
+    const markerFadeEnabled = ref('on');
 
     const mapOptions = {
       disableDefaultUI: true,
@@ -249,7 +273,11 @@ export default {
     };
 
     const calculateOpacityIcon = (baseIcon, dateReported) => {
-     
+      // If fade effect is disabled or time filter is not set to 'day', return original icon
+      if (markerFadeEnabled.value === 'off' || (markerTimeFilter.value !== 'day' && markerTimeFilter.value !== 'off')) {
+        return baseIcon;
+      }
+      
       const elapsedHours = (Date.now() - new Date(dateReported).getTime()) / (1000 * 60 * 60);
       let newUrl = baseIcon;
 
@@ -587,6 +615,27 @@ export default {
       showMarkerMenu.value = false;
     };
 
+    const isMarkerWithinTimeFilter = (dateReported) => {
+      if (markerTimeFilter.value === 'off') return true;
+      
+      const now = new Date();
+      const markerDate = new Date(dateReported);
+      const timeDiff = now - markerDate;
+      
+      switch (markerTimeFilter.value) {
+        case 'day':
+          return timeDiff <= 24 * 60 * 60 * 1000;
+        case 'week':
+          return timeDiff <= 7 * 24 * 60 * 60 * 1000;
+        case 'month':
+          return timeDiff <= 30 * 24 * 60 * 60 * 1000;
+        case 'year':
+          return timeDiff <= 365 * 24 * 60 * 60 * 1000;
+        default:
+          return true;
+      }
+    };
+
     return {
       mapCenter,
       mapOptions,
@@ -623,7 +672,10 @@ export default {
       openInfoWindow,
       formatDate,
       handleVote,
-      yesVotes
+      yesVotes,
+      markerTimeFilter,
+      markerFadeEnabled,
+      isMarkerWithinTimeFilter,
     };
   },
 };
