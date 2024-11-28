@@ -29,9 +29,11 @@
   .confirm-modal {
     display: flex;
     justify-content: center;
+    padding: 1rem;
     align-items: center;
   }
   .confirm-modal-content {
+    font-family: Arial, Helvetica, sans-serif; 
     display: flex;
     flex-direction: column;
     padding: 1rem;

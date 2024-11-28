@@ -236,8 +236,6 @@ export default {
       return resultIcon;
     };
 
-
-
     const getUserLocation = () => {
       if (navigator.geolocation) {
         navigator.geolocation.getCurrentPosition(
@@ -328,14 +326,45 @@ export default {
     const { open, close } = useModal({
       component: ModalConfirmPlainCss,
       attrs: {
-        title: 'Thank you for your report!',
+        title: 'Your Report Has Been Saved!',
         onConfirm() {
           close()
         },
       },
       slots: {
-        default: '<p>We highly recommend our users to report to the Victoria Police Department. Visit VicPD (link here) for serious incidents. </p>',
-      },
+    default: `
+      <div>
+        <!-- Thank You Note -->
+        <p style="font-size: 20px;">Thank you for your report! Your contribution helps make our community a safer and better place for everyone.</p>
+        
+        <!-- Transportation Ad -->
+        <div style="padding: 20px; background-color: #53B0B2; border: 1px solid #ddd; margin-top: 20px;">
+          <div style="display: flex; align-items: center;">
+            <img src="../../public/car.png" alt="Safe Ride Icon" style="width: 50px; margin-right: 15px;">
+            <div>
+              <p style="margin: 0; font-size: 16px; font-weight: bold; color: rgba(255, 255, 255, 0.87);">Get Home Safely!</p>
+              <p style="margin: 0; font-size: 14px; color: rgba(255, 255, 255, 0.87);">Consider using a rideshare service for a safer journey home.</p>
+            </div>
+          </div>
+        </div>
+        <!-- Separator -->
+        <div style="margin: 15px 0; border-top: 1px solid #ddd;"></div>
+        
+        <!-- VicPD Information -->
+        <div style="background-color: #14243f; padding: 15px; border: 1px solid #ddd; border-radius: 5px;">
+          <p style="color: rgba(255, 255, 255, 0.87);"><strong>Victoria Police Department</strong></p>
+          <p style="color: rgba(255, 255, 255, 0.87);">For serious incidents, we encourage you to contact the <a href="https://vicpd.ca/" target="_blank" style="color: #007BFF; text-decoration: underline;">Victoria Police Department</a> directly.</p>
+          <iframe 
+            src="https://vicpd.ca/services/" 
+            width="100%" 
+            height="200px" 
+            style="border: 1px solid #ccc; border-radius: 4px;"
+          ></iframe>
+          <p style="margin-top: 10px; font-weight: bold; color: rgba(255, 255, 255, 0.87);">For emergencies, please call 911.</p>
+        </div>
+      </div>
+    `,
+  },
     });
 
     const calculateWeight = (marker) => {
