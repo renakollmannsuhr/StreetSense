@@ -38,6 +38,12 @@
             <div class="info-window">
               <p class="info-title"><strong>{{ marker.type }}</strong> reported here</p>
               <p class="info-date">on {{ formatDate(marker.date_reported) }}</p>
+              <p>Did you witness this incident?</p>
+
+              <div class="voting-section">
+                <button @click="handleVote()" class="vote-button yes">Yes</button>
+                <p> {{ yesVotes }} votes</p>
+              </div>
             </div>
           </GMapInfoWindow>
         </GMapMarker>
@@ -153,6 +159,7 @@ export default {
     const openMarker = ref(null);
     const showMarkerMenu = ref(false);
     const markers = ref([]);
+    let yesVotes = ref(0);
     const showFilterMenu = ref(false);
     const filterByTypes = ref({
       theft: true,
@@ -255,6 +262,10 @@ export default {
     const openInfoWindow = (marker) =>{
       openMarker.value = marker;
     }
+
+    const handleVote = () => {
+      yesVotes.value++;
+    };
 
     const formatDate = (dateString) => {
       if (!dateString) return 'Unknown date'; // Handle null or undefined dates
@@ -550,7 +561,9 @@ export default {
       openInfoWindow,
       formatDate,
       open,
-      close
+      close,
+      handleVote,
+      yesVotes
     };
   },
 };
@@ -744,6 +757,25 @@ label {
   color: rgb(56, 56, 62);
   font-size: 20px;
   margin-bottom: 20px;
+}
+
+.voting-section {
+  margin-top: 10px;;
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+}
+
+.vote-button {
+  margin: 5px;
+  padding: 8px 12px;
+  border: none;
+  cursor: pointer;
+}
+
+.vote-button.yes {
+  background-color: #4CAF50; /* Green for Yes */
+  color: white;
 }
 
 /* Media query for mobile devices */
