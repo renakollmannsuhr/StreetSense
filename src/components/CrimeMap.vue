@@ -20,8 +20,33 @@
         <GMapMarker
           v-if="filterByTypes[marker.type]"
           :position="{ lat: marker.latitude, lng: marker.longitude }"
+          :clickable="true"
           :icon="getMarkerIcon(marker.type, marker.date_reported)"
-        />
+          @click="openInfoWindow(marker.id)"
+        >
+          <GMapInfoWindow 
+          @closeclick="openMarker === null"
+          :opened="openMarker === marker.id"
+          :options=" {
+              pixelOffset: {
+                width: 10, height: 0
+              },
+              maxWidth: 200,
+              maxHeight: 320,
+          }"
+          >
+            <div class="info-window">
+              <p class="info-title"><strong>{{ marker.type }}</strong> reported here</p>
+              <p class="info-date">on {{ formatDate(marker.date_reported) }}</p>
+              <p>Did you witness this incident?</p>
+
+              <div class="voting-section">
+                <button @click="handleVote()" class="vote-button yes">Yes</button>
+                <p> {{ yesVotes }} votes</p>
+              </div>
+            </div>
+          </GMapInfoWindow>
+        </GMapMarker>
       </template>
 
       <GMapHeatmap 
@@ -148,6 +173,31 @@
         </div>
       </div>
     </div>
+<<<<<<< HEAD
+=======
+
+    <!-- Add user controls -->
+    <!-- <div class="heatmap-controls">
+      <label>Heatmap Time Filter</label>
+      <select v-model="timeFilter">
+        <option value="all">All Time</option>
+        <option value="week">Past Week</option>
+        <option value="month">Past Month</option>
+        <option value="year">Past Year</option>
+      </select> -->
+      
+      <!-- <div class="opacity-control">
+        <label>Heatmap Intensity</label>
+        <input 
+          type="range" 
+          v-model.number="heatmapOptions.opacity" 
+          min="0" 
+          max="1" 
+          step="0.1"
+        />
+      </div> -->
+    <!-- </div> -->
+>>>>>>> 7a6f2cef44709d5f17fc9fa0a2eaf68094e12e26
     <div>
       <ModalsContainer />
     </div>
@@ -174,8 +224,10 @@ export default {
     const mapCenter = ref({ lat: 48.4359, lng: -123.35155 });
     const userLocation = ref(null);
     const selectedMarker = ref(null);
+    const openMarker = ref(null);
     const showMarkerMenu = ref(false);
     const markers = ref([]);
+    let yesVotes = ref(0);
     const showFilterMenu = ref(false);
     const filterByTypes = ref({
       theft: true,
@@ -208,7 +260,6 @@ export default {
       ]
     };
 
-
     const heatmapOptions = {
       radius: 85,
       opacity: 0.5,
@@ -222,12 +273,9 @@ export default {
       ]
     };
 
-
     const calculateOpacityIcon = (baseIcon, dateReported) => {
      
       const elapsedHours = (Date.now() - new Date(dateReported).getTime()) / (1000 * 60 * 60);
-  
-
       let newUrl = baseIcon;
 
       if (elapsedHours <= 3.43) return `${newUrl}`;
@@ -280,6 +328,29 @@ export default {
       return resultIcon;
     };
 
+<<<<<<< HEAD
+=======
+    const openInfoWindow = (marker) =>{
+      openMarker.value = marker;
+    }
+
+    const handleVote = () => {
+      yesVotes.value++;
+    };
+
+    const formatDate = (dateString) => {
+      if (!dateString) return 'Unknown date'; // Handle null or undefined dates
+      const date = new Date(dateString); // Use `new` to create a valid Date object
+      return new Intl.DateTimeFormat('en-US', {
+        month: 'long',
+        day: 'numeric',
+        year: 'numeric',
+        hour: 'numeric',
+        minute: 'numeric',
+      }).format(date);
+    };
+
+>>>>>>> 7a6f2cef44709d5f17fc9fa0a2eaf68094e12e26
     const getUserLocation = () => {
       if (navigator.geolocation) {
         navigator.geolocation.getCurrentPosition(
@@ -551,6 +622,7 @@ export default {
       userIcon,
       getUserLocation,
       selectedMarker,
+      openMarker,
       showMarkerMenu,
       toggleMarkerMenu,
       selectMarker,
@@ -572,10 +644,19 @@ export default {
       oneHourFilterEnabled,
       getMarkerIcon,
       calculateOpacityIcon,
+<<<<<<< HEAD
       open,
       close,
       toggleInfoMenu,
       showInfoMenu,
+=======
+      openInfoWindow,
+      formatDate,
+      open,
+      close,
+      handleVote,
+      yesVotes
+>>>>>>> 7a6f2cef44709d5f17fc9fa0a2eaf68094e12e26
     };
   },
 };
@@ -752,6 +833,42 @@ label {
 
 .filter-item {
   margin-bottom: 10px;
+}
+
+.info-window {
+  text-align: center;
+  font-size: 16px;
+  font-family: Arial, sans-serif;
+}
+
+.info-title {
+  font-size: 186x;
+  margin-bottom: 5px;
+}
+
+.info-date {
+  color: rgb(56, 56, 62);
+  font-size: 20px;
+  margin-bottom: 20px;
+}
+
+.voting-section {
+  margin-top: 10px;;
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+}
+
+.vote-button {
+  margin: 5px;
+  padding: 8px 12px;
+  border: none;
+  cursor: pointer;
+}
+
+.vote-button.yes {
+  background-color: #4CAF50; /* Green for Yes */
+  color: white;
 }
 
 /* Media query for mobile devices */

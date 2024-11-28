@@ -86,3 +86,4 @@ This project makes use of ChatGPT for app feature ideation, persona creations, m
 <a href="" title="fist icons">Fist icons created by Smashicons - Flaticon</a>
 <a href="" title="alert icons">Alert icons created by Freepik - Flaticon</a>
 <a href="" title="padlock icons">Padlock icons created by Freepik - Flaticon</a>
+<a href="https://www.flaticon.com/free-icons/uber" title="uber icons">Uber icons created by Freepik - Flaticon</a>
