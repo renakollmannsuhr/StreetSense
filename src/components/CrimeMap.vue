@@ -155,9 +155,6 @@
               {{incidenceType.name}}
             </label>
           </div>
-
-
-
           <div class="filter-item">
             <label>Incident Time Range</label>
             <select v-model="markerTimeFilter">
@@ -168,13 +165,6 @@
               <option value="all">All Time</option>
             </select>
           </div>
-          <!-- <div class="filter-item">
-            <label>Marker Fade Effect</label>
-            <select v-model="markerFadeEnabled">
-              <option value="on">Enabled</option>
-              <option value="off">Disabled</option>
-            </select>
-          </div> -->
 
           <div class="filter-item">
             <label>Heatmap Time Filter</label>
@@ -310,9 +300,8 @@ export default {
       try {
         const response = await axios.get('/api/reports/');
         markers.value = response.data;
-        // Initialize filtered data
+  
         updateHeatmap();
-      
         getUserLocation();
         
         heatmapReady.value = true;
@@ -442,45 +431,46 @@ export default {
     const { open, close } = useModal({
       component: ModalConfirmPlainCss,
       attrs: {
-        title: 'Your Report Has Been Saved!',
         onConfirm() {
           close()
         },
       },
       slots: {
-    default: `
-      <div>
-        <!-- Thank You Note -->
-        <p style="font-size: 20px;">Thank you for your report! Your contribution helps make our community a safer and better place for everyone.</p>
-        
-        <!-- Transportation Ad -->
-        <div style="padding: 20px; background-color: #53B0B2; border: 1px solid #ddd; margin-top: 20px;">
-          <div style="display: flex; align-items: center;">
-            <img src="/car.png" alt="Safe Ride Icon" style="width: 50px; margin-right: 15px;">
-            <div>
-              <p style="margin: 0; font-size: 16px; font-weight: bold; color: rgba(255, 255, 255, 0.87);">Get Home Safely!</p>
-              <p style="margin: 0; font-size: 14px; color: rgba(255, 255, 255, 0.87);">Consider using a rideshare service for a safer journey home.</p>
+        default: `
+          <div>
+            <h1>Your Report Has Been Saved! </h1>
+            <!-- Thank You Note -->
+            <p>Thank you for your report! Your contribution helps make our community a safer and better place for everyone.</p>
+            
+            <!-- Transportation Ad -->
+            <div style="padding: 10px; background-color: #53B0B2; border: 1px solid #ddd;">
+              <div style="display: flex; align-items: center;">
+                <img src="/car.png" alt="Safe Ride Icon" style="width: 50px; margin-right: 15px;">
+                <div>
+                  <p style="margin: 0; font-size: 16px; font-weight: bold; color: rgba(255, 255, 255, 0.87);">Get Home Safely!</p>
+                  <p style="margin: 0; font-size: 14px; color: rgba(255, 255, 255, 0.87);">Consider using a rideshare service for a safer journey home.</p>
+                </div>
+              </div>
+            </div>
+            <!-- Separator -->
+            <div style="margin: 10px 0; border-top: 1px solid #ddd;"></div>
+            
+            <!-- VicPD Information -->
+            <div style="background-color: #14243f; padding: 10px; border: 1px solid #ddd; border-radius: 5px;">
+              <p style="color: rgba(255, 255, 255, 0.87);"><strong>Victoria Police Department</strong></p>
+              <p style="color: rgba(255, 255, 255, 0.87);">For serious incidents, we encourage you to contact the <a href="https://vicpd.ca/" target="_blank" style="color: #007BFF; text-decoration: underline;">Victoria Police Department</a> directly.</p>
+              <iframe 
+                src="https://vicpd.ca/services/" 
+                width="100%" 
+                height="200px" 
+                class="vic-pd"
+                style="border: 1px solid #ccc; border-radius: 4px;"
+              ></iframe>
+              <p style="margin-top: 10px; font-weight: bold; color: rgba(255, 255, 255, 0.87);">For emergencies, please call 911.</p>
             </div>
           </div>
-        </div>
-        <!-- Separator -->
-        <div style="margin: 15px 0; border-top: 1px solid #ddd;"></div>
-        
-        <!-- VicPD Information -->
-        <div style="background-color: #14243f; padding: 15px; border: 1px solid #ddd; border-radius: 5px;">
-          <p style="color: rgba(255, 255, 255, 0.87);"><strong>Victoria Police Department</strong></p>
-          <p style="color: rgba(255, 255, 255, 0.87);">For serious incidents, we encourage you to contact the <a href="https://vicpd.ca/" target="_blank" style="color: #007BFF; text-decoration: underline;">Victoria Police Department</a> directly.</p>
-          <iframe 
-            src="https://vicpd.ca/services/" 
-            width="100%" 
-            height="200px" 
-            style="border: 1px solid #ccc; border-radius: 4px;"
-          ></iframe>
-          <p style="margin-top: 10px; font-weight: bold; color: rgba(255, 255, 255, 0.87);">For emergencies, please call 911.</p>
-        </div>
-      </div>
-    `,
-  },
+        `,
+      },
     });
 
     const calculateWeight = (marker) => {
@@ -890,18 +880,6 @@ label {
   color: white;
 }
 
-/* Media query for mobile devices */
-@media (max-width: 768px) {
-    .button-panel {
-        bottom: 100px; /* Raise it higher for smaller screens */
-    }
-}
-
-
-
-
-
-
 .info-button {
   width: 50px;
   height: 50px;
@@ -1043,5 +1021,12 @@ label {
 
 .donate-button:hover {
   background-color: #0056b3;
+}
+
+/* Media query for mobile devices */
+@media (max-width: 768px) {
+    .button-panel {
+        bottom: 100px; /* Raise it higher for smaller screens */
+    }
 }
 </style>
