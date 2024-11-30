@@ -1,11 +1,11 @@
-# StreetSense
-This is our StartupProgramming project StreetSense for Fall 2024.
+# Welcome to StreetSense!
+This is a project for the StartupProgramming (SENG480A) course at the University of Victoria for the Fall 2024 semester.
 
 # Description
 StreetSense is a software application that integrates with Google Maps. Users can report crimes or incidents they witness at specific locations. Other users can then view this information to check if there have been any recently reported crimes, allowing them to plan a different route or exercise caution in certain areas. 
 
 # Credits
-This project is a collborative task between Nikolas Johnson (CSC), Callum Rush (BCOM), Emila Suska (SENG), Jack Zedler (BCOM), William Warrellow (BCOM), and Rena Kollmann-Suhr (SENG). If you have any questions regarding the GitHub repository, please forward them to the repository owner: Rena Kollmann-Suhr.
+This project is a collborative task between Nikolas Johnson (CSC), Emila Suska (SENG), Jack Zedler (BCOM), William Warrellow (BCOM), and Rena Kollmann-Suhr (SENG). If you have any questions regarding the GitHub repository, please forward them to the repository owner: Rena Kollmann-Suhr.
 
 # Live Project Link
 [www.streetsense.live](https://www.streetsense.live)
@@ -14,18 +14,16 @@ This project is a collborative task between Nikolas Johnson (CSC), Callum Rush (
 
 # Product Page
 
-Our current product page draft is available at [www.streetsense.live/product](https://williamdw6.wixsite.com/streetsense)
+Our current product page draft is available on [Wix](https://williamdw6.wixsite.com/streetsense), and by pressing the "info" button on our app followed by "product page" on the subsequent modal.
 
-This page is still a work in progress.
-As our app's main feature is a map view, we modeled it after other apps like [Open Street Maps](https://www.openstreetmap.org/about) where the user initially lands on the map view of the app and then can click an 'About' link to access the product page. We are still working on implmenting this 'About' link on our map landing page.
-
-# Milestone Slide Decks
-[Canva presentation slides link](https://www.canva.com/design/DAGVAQP41qc/utRE8anDTQa0y_yQQfE_Sg/edit?utm_content=DAGVAQP41qc&utm_campaign=designshare&utm_medium=link2&utm_source=sharebutton)
+# Milestone 3 Slide Deck
+[Canva presentation slides link](https://www.canva.com/design/DAGXtvv-OYY/TmOeM271FtU25H9288DUEw/edit?utm_content=DAGXtvv-OYY&utm_campaign=designshare&utm_medium=link2&utm_source=sharebutton)
 
 # Shared Documentation Google Drive
 Please view the following Google Drive folder to find:
 - Value Proposition documents
-- Personas documentation;
+- Personas documentation
+- User Validation Research Notes and Insights
 - Technical details and documentation 
 - Team contributions 
 - Customers interview scripts
@@ -64,10 +62,6 @@ This application assumes you have the following installed:
 ### Shut Down App
 
     docker-compose down -v
-
-### Access Postgres Container
-
-    docker exec -it postgres_ss psql -U postgres -d streetsense
 
 # License Information
 
