@@ -49,14 +49,14 @@ This application assumes you have the following installed:
 
 ### Start App (from within the streetsense direcctory)
 
-- set DEBUG=True in settings.py
-
+set DEBUG=True in settings.py
+    
     `docker-compose up -d --build`
-
+    
     `docker-compose exec backend python manage.py migrate`
-
-    frontend will be available at: 
-
+    
+frontend will be available at: 
+    
         http://localhost:5173 
 
 ### Shut Down App
@@ -77,7 +77,11 @@ This project makes use of ChatGPT for app feature ideation, code, persona creati
 
 # Icon Image Credits
 <a href="https://www.flaticon.com/free-icons/swearing" title="swearing icons">Swearing icons created by Kajo - Flaticon</a>
+
 <a href="" title="fist icons">Fist icons created by Smashicons - Flaticon</a>
+
 <a href="" title="alert icons">Alert icons created by Freepik - Flaticon</a>
+
 <a href="" title="padlock icons">Padlock icons created by Freepik - Flaticon</a>
+
 <a href="https://www.flaticon.com/free-icons/uber" title="uber icons">Uber icons created by Freepik - Flaticon</a>
