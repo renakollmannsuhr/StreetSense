@@ -131,7 +131,7 @@
         <!-- Marker selection buttons -->
         <div v-if="showMarkerMenu" class="marker-buttons">
           <button v-for="(incidenceType, type) in incidenceTypes" :key="type" @click="selectMarker(type)">
-            <img :src="incidenceType.icon.url" :alt="incidenceType.name" class="marker-icon" />
+            <img :src="incidenceType.icon.url" :alt="incidenceType.name" class="selection-icon"/>
           </button>
         </div>
       </div>
@@ -725,7 +725,18 @@ export default {
   left: 50%;
   transform: translateX(-50%);
   display: flex;
-  gap: 10px; /* Space between buttons */
+  gap: 2px; /* Space between buttons */
+}
+
+button {
+    background-color: transparent;
+    border: none; /* If borders are undesired */
+    box-shadow: none; /* Removes default button shadow */
+}
+
+.selection-icon {
+  width: 60px; /* Adjust size as needed */
+  height: 60px;
 }
 
 .marker-icon {
