@@ -434,6 +434,13 @@ export default {
         onConfirm() {
           close()
         },
+        onDelete() {
+          const lastMarker = markers.value[markers.value.length - 1];
+          if (lastMarker) {
+            deleteMarker(lastMarker.id);
+          }
+          close();
+        }
       },
       slots: {
         default: `
@@ -626,6 +633,20 @@ export default {
       }
     };
 
+    const deleteMarker = async (markerId) => {
+      try {
+        await axios.delete(`/api/reports/${markerId}/`);
+        // Remove the marker from the local state
+        markers.value = markers.value.filter(marker => marker.id !== markerId);
+        // Close the info window
+        openMarker.value = null;
+        // Update the heatmap
+        updateHeatmap();
+      } catch (error) {
+        console.error('Error deleting marker:', error);
+      }
+    };
+
     return {
       mapCenter,
       mapOptions,
@@ -666,6 +687,7 @@ export default {
       markerTimeFilter,
       markerFadeEnabled,
       isMarkerWithinTimeFilter,
+      deleteMarker,
     };
   },
 };
