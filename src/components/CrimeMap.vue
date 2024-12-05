@@ -59,7 +59,7 @@
     <div class="button-panel">
       <div>
         
-        <button class="info-button" @click="toggleInfoMenu">
+        <button v-tippy="{ content: 'App Information', theme: 'theme' }" class="info-button" @click="toggleInfoMenu">
           i
         </button>
 
@@ -124,7 +124,7 @@
 
       <div>
         <!-- Plus button to choose marker -->
-        <button class="plus-button" @click="toggleMarkerMenu">
+        <button v-tippy="{ content: 'Report Incident', theme: 'theme' }" class="plus-button" @click="toggleMarkerMenu">
           +
         </button>
 
@@ -138,7 +138,7 @@
 
       <div>
         <!-- Filter button -->
-        <button class="filter-button" @click="toggleFilterMenu">
+        <button v-tippy="{ content: 'Filter Incidents', theme: 'theme' }" class="filter-button" @click="toggleFilterMenu">
           <img src="/filter.png" alt="Filter" class="filter-icon" />
         </button>
 
@@ -197,6 +197,7 @@ import axios from 'axios';
 import 'vue-final-modal/style.css';
 import { ModalsContainer, useModal } from 'vue-final-modal';
 import ModalConfirmPlainCss from './ModalConfirmPlainCss.vue';
+import { directive } from 'vue-tippy';
 
 // Use relative paths when using proxy, or set base URL
 //axios.defaults.baseURL = 'http://localhost:8000'; // dev mode
@@ -206,6 +207,9 @@ export default {
   name: 'CrimeMap',
   components: {
     ModalsContainer,
+  },
+  directives: {
+    tippy: directive,
   },
   setup() {
     const mapCenter = ref({ lat: 48.4359, lng: -123.35155 });
@@ -748,7 +752,7 @@ export default {
 }
 
 .plus-button:hover {
-  background-color: #0056b3;
+  background-color: #1e3e80;
 }
 
 .marker-buttons {
@@ -783,7 +787,7 @@ button {
   justify-content: center;
   align-items: center;
   font-size: 50px;
-  background-color: #007bff;
+  background-color: #295bbe;
   color: #fff;
   padding: 0;
   border: none;
@@ -798,7 +802,7 @@ button {
   justify-content: center;
   align-items: center;
   font-size: 50px;
-  background-color: #007bff;
+  background-color: #295bbe;
   color: #fff;
   padding: 0;
   border: none;
@@ -807,7 +811,7 @@ button {
 }
 
 .filter-button:hover {
-  background-color: #0056b3;
+  background-color: #1e3e80;
 }
 
 .filter-options {
@@ -919,7 +923,7 @@ label {
 }
 
 .vote-button.yes {
-  background-color: #007bff; 
+  background-color: #295bbe; 
   color: white;
 }
 
@@ -930,7 +934,7 @@ label {
   justify-content: center;
   align-items: center;
   font-size: 34px;
-  background-color: #007bff;
+  background-color: #295bbe;
   color: #fff;
   padding: 0;
   border: none;
@@ -941,7 +945,7 @@ label {
 }
 
 .info-button:hover {
-  background-color: #0056b3;
+  background-color: #1e3e80;
 }
 
 .info-menu {
