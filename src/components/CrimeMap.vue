@@ -41,8 +41,8 @@
               <p>Did you witness this incident?</p>
 
               <div class="voting-section">
-                <button @click="handleVote()" class="vote-button yes">Yes</button>
-                <p> {{ yesVotes }} votes</p>
+                <button @click="handleVote(marker.id)" class="vote-button yes">Yes</button>
+                <p>{{ marker.vote_count }} votes</p>
               </div>
             </div>
           </GMapInfoWindow>
@@ -214,7 +214,6 @@ export default {
     const openMarker = ref(null);
     const showMarkerMenu = ref(false);
     const markers = ref([]);
-    let yesVotes = ref(0);
     const showFilterMenu = ref(false);
     const filterByTypes = ref({
       Theft: true,
@@ -324,8 +323,20 @@ export default {
       openMarker.value = marker;
     }
 
-    const handleVote = () => {
-      yesVotes.value++;
+    const handleVote = async (selectedMarkerId) => {
+      try {
+        const marker = markers.value.find((m) => m.id === selectedMarkerId);
+        if (!marker) throw new Error(`Marker with id ${selectedMarkerId} not found`);
+
+        const updatedVoteCount = marker.vote_count + 1;
+
+        await axios.patch(`/api/reports/${selectedMarkerId}/`, {
+          vote_count: updatedVoteCount, 
+        });
+        marker.vote_count = updatedVoteCount;
+      } catch (error) {
+        console.error('Error updating vote count:', error.response?.data || error.message);
+      }
     };
 
     const formatDate = (dateString) => {
@@ -662,7 +673,6 @@ export default {
       openInfoWindow,
       formatDate,
       handleVote,
-      yesVotes,
       markerTimeFilter,
       markerFadeEnabled,
       isMarkerWithinTimeFilter,
@@ -887,7 +897,7 @@ label {
 }
 
 .vote-button.yes {
-  background-color: #4CAF50; /* Green for Yes */
+  background-color: #007bff; 
   color: white;
 }
 
