@@ -57,78 +57,78 @@
     </GMapMap>
 
     <div class="button-panel">
+      <!-- Info button -->
       <div>
         
         <button v-tippy="{ content: 'App Information', theme: 'theme' }" class="info-button" @click="toggleInfoMenu">
           i
         </button>
-
-        <!-- Info Menu -->
-        <div v-if="showInfoMenu" class="info-menu">
-          <div class="title-row">
-            <h3>About StreetSense</h3>
-            <a href="https://williamdw6.wixsite.com/streetsense" target="_blank" class="website-link">Product Page</a>
-          </div>
-          <p>StreetSense helps you stay informed about incidents in your area:</p>
-          <ul>
-            <li>View recent incidents on the map</li>
-            <li>Report incidents using the + button</li>
-            <li>Filter incident types using the filter button</li>
-            <li>Marker opacity indicates incident recency</li>
-            <li>Heatmap shows historical incidents</li>
-            <li>Click on a marker to see more details</li>
-          </ul>
-          
-          <div class="legend">
-            <h4>Incident Types:</h4>
-            <div class="legend-container">
-              <div class="legend-item">
-                <img src="/theft.png" alt="Theft" class="legend-icon" />
-                <div class="legend-text">
-                  <span class="legend-title">Theft</span>
-                  <span class="legend-description"> - Stolen property or belongings</span>
-                </div>
-              </div>
-              <div class="legend-item">
-                <img src="/assault.png" alt="Assault" class="legend-icon" />
-                <div class="legend-text">
-                  <span class="legend-title">Threats</span>
-                  <span class="legend-description"> - Physical or verbal threats and altercations</span>
-                </div>
-              </div>
-              <div class="legend-item">
-                <img src="/disturbance.png" alt="Disturbance" class="legend-icon" />
-                <div class="legend-text">
-                  <span class="legend-title">Disturbance</span>
-                  <span class="legend-description"> - Public disorder or noise</span>
-                </div>
-              </div>
-              <div class="legend-item">
-                <img src="/damage.png" alt="Damage" class="legend-icon" />
-                <div class="legend-text">
-                  <span class="legend-title">Damage</span>
-                  <span class="legend-description"> - Vandalism or property damage</span>
-                </div>
-              </div>
-            </div>
-            
-            <div class="donate-container">
-              <a href="https://williamdw6.wixsite.com/streetsense#comp-m3rnsn51" target="_blank" class="donate-button">
-                Support This Project
-              </a>
-            </div>
-          </div>
-        </div>
-
       </div>
 
+      <!-- Info menu -->
+      <div v-if="showInfoMenu" class="info-menu">
+        <div class="title-row">
+          <h3>About StreetSense</h3>
+          <a href="https://williamdw6.wixsite.com/streetsense" target="_blank" class="website-link">Product Page</a>
+        </div>
+        <p>StreetSense helps you stay informed about incidents in your area:</p>
+        <ul>
+          <li>View recent incidents on the map</li>
+          <li>Report incidents using the + button</li>
+          <li>Filter incident types using the filter button</li>
+          <li>Marker opacity indicates incident recency</li>
+          <li>Heatmap shows historical incidents</li>
+          <li>Click on a marker to see more details</li>
+        </ul>
+        
+        <div class="legend">
+          <h4>Incident Types:</h4>
+          <div class="legend-container">
+            <div class="legend-item">
+              <img src="/theft.png" alt="Theft" class="legend-icon" />
+              <div class="legend-text">
+                <span class="legend-title">Theft</span>
+                <span class="legend-description"> - Stolen property or belongings</span>
+              </div>
+            </div>
+            <div class="legend-item">
+              <img src="/assault.png" alt="Assault" class="legend-icon" />
+              <div class="legend-text">
+                <span class="legend-title">Threats</span>
+                <span class="legend-description"> - Physical or verbal threats and altercations</span>
+              </div>
+            </div>
+            <div class="legend-item">
+              <img src="/disturbance.png" alt="Disturbance" class="legend-icon" />
+              <div class="legend-text">
+                <span class="legend-title">Disturbance</span>
+                <span class="legend-description"> - Public disorder or noise</span>
+              </div>
+            </div>
+            <div class="legend-item">
+              <img src="/damage.png" alt="Damage" class="legend-icon" />
+              <div class="legend-text">
+                <span class="legend-title">Damage</span>
+                <span class="legend-description"> - Vandalism or property damage</span>
+              </div>
+            </div>
+          </div>
+          
+          <div class="donate-container">
+            <a href="https://williamdw6.wixsite.com/streetsense#comp-m3rnsn51" target="_blank" class="donate-button">
+              Support This Project
+            </a>
+          </div>
+        </div>
+      </div>
+
+      <!-- Report button and menu -->
       <div>
         <!-- Plus button to choose marker -->
         <button v-tippy="{ content: 'Report Incident', theme: 'theme' }" class="plus-button" @click="toggleMarkerMenu">
           +
         </button>
 
-        <!-- Marker selection buttons -->
         <div v-if="showMarkerMenu" class="marker-buttons">
           <button v-for="(incidenceType, type) in incidenceTypes" :key="type" @click="selectMarker(type)">
             <img :src="incidenceType.icon.url" :alt="incidenceType.name" class="selection-icon"/>
@@ -136,14 +136,16 @@
         </div>
       </div>
 
+      <!-- Filter button -->
       <div>
         <!-- Filter button -->
         <button v-tippy="{ content: 'Filter Incidents', theme: 'theme' }" class="filter-button" @click="toggleFilterMenu">
           <img src="/filter.png" alt="Filter" class="filter-icon" />
         </button>
+      </div>
 
-        <!-- Filter options -->
-        <div v-if="showFilterMenu" class="filter-options">
+      <!-- Filter menu -->
+      <div v-if="showFilterMenu" class="filter-options">
           <div class="filter-icon-item" v-for="(incidenceType, type) in incidenceTypes" :key="type">
             <input type="checkbox"
               :name="'enable_' + type"
@@ -183,7 +185,6 @@
           </div>
           
         </div>
-      </div>
     </div>
     <div>
       <ModalsContainer />
@@ -720,8 +721,8 @@ export default {
 }
 
 .button-panel {
-  position: absolute;
-  bottom: 20px;
+  position: relative;
+  bottom: 10%;
   left: 0;
   right: 0;
   display: flex;
@@ -730,10 +731,6 @@ export default {
   align-items: center;
   padding: 10px;
   z-index: 1000;
-}
-
-.button-panel > div {
-  position: relative
 }
 
 .plus-button {
@@ -816,7 +813,8 @@ button {
 
 .filter-options {
   position: absolute;
-  bottom: 60px;
+  bottom: 100%;
+  left: 50%;
   transform: translateX(-50%);
   background-color: #fff;
   box-shadow: 0 0 4px #0005;
@@ -830,7 +828,7 @@ button {
   display: flex;
   align-items: flex-start;
   flex-direction:column;
-  margin-top: 2rem; /* Adds space below each item */
+  margin-top: 0.5rem;
 }
 
 .filter-icon-item {
@@ -949,9 +947,9 @@ label {
 }
 
 .info-menu {
-  position: absolute;
-  bottom: 60px;
-  left: 75%;
+  position:absolute;
+  bottom: 100%;
+  left: 50%;
   transform: translateX(-50%);
   background-color: #fff;
   box-shadow: 0 0 4px rgba(0, 0, 0, 0.3);
@@ -961,13 +959,14 @@ label {
   width: 80vw;
   max-width: 600px;
   z-index: 1000;
-  margin: 0 auto;
+  padding: 10px;
   box-sizing: border-box;
 }
 
 .info-menu h3 {
-  margin-top: 0;
+  margin: 0;
   color: #333;
+  font-size: 1.5rem;
 }
 
 .info-menu ul {
@@ -1072,8 +1071,33 @@ label {
 
 /* Media query for mobile devices */
 @media (max-width: 768px) {
-    .button-panel {
-        bottom: 100px; /* Raise it higher for smaller screens */
-    }
+  .button-panel {
+    bottom: 25%;
+  }.info-menu {
+    font-size: 14px;
+  }
+  .info-menu h3 {
+    font-size: 1.5em;
+  }
+  .donate-container {
+    margin-top: 10px;
+  }
+  .website-link {
+    font-size: 1em;
+  }
+  .title-row {
+    flex-direction: column;
+    align-items: flex-start;
+    margin: 0px;
+  }
+  .filter-options {
+    font-size: 13px;
+  }
+  select {
+    font-size: 10px;
+  }
+  .filter-item {
+    margin-bottom: 0;
+  }
 }
 </style>
