@@ -7,6 +7,7 @@
 
   const emit = defineEmits<{
     (e: 'confirm'): void
+    (e: 'delete'): void
   }>()
   </script>
 
@@ -18,9 +19,14 @@
       content-transition="vfm-fade"
     >
       <slot />
-      <button @click="emit('confirm')">
-        Ok
-      </button>
+      <div class="buttons">
+        <button @click="emit('delete')">
+          Undo
+        </button>
+        <button @click="emit('confirm')">
+          Ok
+        </button>
+      </div>
     </VueFinalModal>
   </template>
 
@@ -59,6 +65,18 @@
   }
   .dark .confirm-modal-content {
     background: #000;
+  }
+
+  .buttons {
+    display: flex;
+    justify-content: space-between;
+    width: 100%;
+    margin-top: .5rem;
+    margin-bottom: -.5rem;
+  }
+
+  .buttons button {
+    margin: 0;
   }
 
   /* Media query for mobile devices */
