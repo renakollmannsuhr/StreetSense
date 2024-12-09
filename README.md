@@ -14,7 +14,7 @@ This project is a collborative task between Nikolas Johnson (CSC), Emila Suska (
 
 # Product Page
 
-Our current product page draft is available on [Wix](https://williamdw6.wixsite.com/streetsense), and by pressing the "info" button on our app followed by "product page" on the subsequent modal.
+Our product page is available at [Wix](https://williamdw6.wixsite.com/streetsense), and by pressing the "info" button on our app followed by the "product page" link on the subsequent modal that opens.
 
 # Milestone 3 Slide Deck
 [Canva presentation slides link](https://www.canva.com/design/DAGXtvv-OYY/TmOeM271FtU25H9288DUEw/edit?utm_content=DAGXtvv-OYY&utm_campaign=designshare&utm_medium=link2&utm_source=sharebutton)
@@ -36,7 +36,7 @@ Documents are organized by assignment/milestone deliverable.
 [Google Drive link](https://drive.google.com/drive/folders/1W2iV3MWGx_8mnkRk0J0EOlWDbFJizGsx?usp=sharing_)
 
 # GitHub Project
-Please see the following link to view project task tacking (Backlog View) and project road map (Roadmap View).
+Please see the following link to view project task tacking (Kanban Board view) and project road map (Roadmap view).
 
 [GitHub Project Link](https://github.com/users/renakollmannsuhr/projects/1/views/1)
 
