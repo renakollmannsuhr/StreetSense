@@ -10,7 +10,7 @@ This project is a collborative task between Nikolas Johnson (CSC), Emila Suska (
 # Live Project Link
 [www.streetsense.live](https://www.streetsense.live)
 
-** please ensure to enable location tracking on your device and your browser
+** Project is no longer live. **
 
 # Product Page
 
